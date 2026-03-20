@@ -1,0 +1,12 @@
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pdfplumber>=0.11.0       # primary PDF extractor (layout-aware)
+pypdf>=4.2.0             # fallback PDF extractor
+python-multipart>=0.0.9  # required for FastAPI file uploads
+
+# NLP — install for full pipeline (optional but recommended)
+# spacy>=3.7.0
+# Run after install: python -m spacy download en_core_web_md
+
+# PyMuPDF — optional third PDF extractor (even better scanned PDF support)
+# pymupdf>=1.24.0

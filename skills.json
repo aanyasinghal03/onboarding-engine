@@ -1,0 +1,104 @@
+{
+  "skills": {
+    "programming_languages": {
+      "python":       {"level": "intermediate", "aliases": ["py", "python3"]},
+      "javascript":   {"level": "intermediate", "aliases": ["js", "es6", "ecmascript"]},
+      "typescript":   {"level": "intermediate", "aliases": ["ts"]},
+      "java":         {"level": "intermediate", "aliases": []},
+      "c++":          {"level": "intermediate", "aliases": ["cpp", "c plus plus"]},
+      "c#":           {"level": "intermediate", "aliases": ["csharp", "dotnet"]},
+      "go":           {"level": "intermediate", "aliases": ["golang"]},
+      "rust":         {"level": "intermediate", "aliases": []},
+      "ruby":         {"level": "intermediate", "aliases": []},
+      "php":          {"level": "beginner",     "aliases": []},
+      "swift":        {"level": "intermediate", "aliases": []},
+      "kotlin":       {"level": "intermediate", "aliases": []},
+      "scala":        {"level": "intermediate", "aliases": []},
+      "r":            {"level": "beginner",     "aliases": ["r language", "rstats"]},
+      "matlab":       {"level": "beginner",     "aliases": []}
+    },
+    "web_frameworks": {
+      "react":        {"level": "intermediate", "aliases": ["reactjs", "react.js"]},
+      "angular":      {"level": "intermediate", "aliases": ["angularjs"]},
+      "vue":          {"level": "intermediate", "aliases": ["vuejs", "vue.js"]},
+      "nextjs":       {"level": "intermediate", "aliases": ["next.js", "next js"]},
+      "fastapi":      {"level": "intermediate", "aliases": ["fast api"]},
+      "django":       {"level": "intermediate", "aliases": ["django rest framework", "drf"]},
+      "flask":        {"level": "beginner",     "aliases": []},
+      "express":      {"level": "intermediate", "aliases": ["expressjs", "express.js"]},
+      "spring boot":  {"level": "intermediate", "aliases": ["spring", "springboot"]},
+      "laravel":      {"level": "beginner",     "aliases": []},
+      "rails":        {"level": "intermediate", "aliases": ["ruby on rails", "ror"]},
+      "nestjs":       {"level": "intermediate", "aliases": ["nest.js"]}
+    },
+    "databases": {
+      "sql":          {"level": "beginner",     "aliases": ["structured query language"]},
+      "mysql":        {"level": "beginner",     "aliases": []},
+      "postgresql":   {"level": "intermediate", "aliases": ["postgres", "psql", "pg"]},
+      "mongodb":      {"level": "beginner",     "aliases": ["mongo"]},
+      "redis":        {"level": "intermediate", "aliases": ["redis cache"]},
+      "elasticsearch":{"level": "intermediate", "aliases": ["elastic search", "elastic", "opensearch"]},
+      "cassandra":    {"level": "intermediate", "aliases": ["apache cassandra"]},
+      "dynamodb":     {"level": "intermediate", "aliases": ["dynamo db"]},
+      "sqlite":       {"level": "beginner",     "aliases": []},
+      "oracle":       {"level": "intermediate", "aliases": ["oracle db"]}
+    },
+    "cloud_devops": {
+      "aws":              {"level": "intermediate", "aliases": ["amazon web services"]},
+      "azure":            {"level": "intermediate", "aliases": ["microsoft azure"]},
+      "gcp":              {"level": "intermediate", "aliases": ["google cloud", "google cloud platform"]},
+      "docker":           {"level": "intermediate", "aliases": ["containerization", "containerisation"]},
+      "kubernetes":       {"level": "intermediate", "aliases": ["k8s", "kube"]},
+      "terraform":        {"level": "intermediate", "aliases": ["tf", "hashicorp terraform"]},
+      "ansible":          {"level": "intermediate", "aliases": []},
+      "jenkins":          {"level": "beginner",     "aliases": []},
+      "github actions":   {"level": "beginner",     "aliases": ["gh actions", "gha"]},
+      "ci/cd":            {"level": "intermediate", "aliases": ["continuous integration", "continuous deployment", "cicd"]},
+      "linux":            {"level": "beginner",     "aliases": ["unix", "bash", "shell scripting"]}
+    },
+    "data_ml": {
+      "machine learning": {"level": "intermediate", "aliases": ["ml"]},
+      "deep learning":    {"level": "intermediate", "aliases": ["dl", "neural networks"]},
+      "tensorflow":       {"level": "intermediate", "aliases": ["tf", "tensor flow"]},
+      "pytorch":          {"level": "intermediate", "aliases": ["torch"]},
+      "pandas":           {"level": "beginner",     "aliases": []},
+      "numpy":            {"level": "beginner",     "aliases": []},
+      "scikit-learn":     {"level": "intermediate", "aliases": ["sklearn", "scikit learn"]},
+      "data analysis":    {"level": "beginner",     "aliases": ["data analytics", "eda"]},
+      "data visualization":{"level":"beginner",     "aliases": ["data viz", "matplotlib", "seaborn", "plotly"]},
+      "nlp":              {"level": "intermediate", "aliases": ["natural language processing"]},
+      "computer vision":  {"level": "intermediate", "aliases": ["cv", "image recognition"]},
+      "mlops":            {"level": "intermediate", "aliases": ["ml ops", "model deployment"]}
+    },
+    "soft_skills": {
+      "agile":            {"level": "beginner",     "aliases": ["agile methodology"]},
+      "scrum":            {"level": "beginner",     "aliases": ["scrum master"]},
+      "communication":    {"level": "beginner",     "aliases": []},
+      "leadership":       {"level": "intermediate", "aliases": []},
+      "problem solving":  {"level": "beginner",     "aliases": ["analytical thinking"]},
+      "teamwork":         {"level": "beginner",     "aliases": ["collaboration"]},
+      "project management":{"level":"intermediate", "aliases": ["pmp", "program management"]},
+      "time management":  {"level": "beginner",     "aliases": []}
+    },
+    "security": {
+      "cybersecurity":    {"level": "intermediate", "aliases": ["information security", "infosec"]},
+      "oauth":            {"level": "intermediate", "aliases": ["oauth2", "oauth 2.0"]},
+      "jwt":              {"level": "beginner",     "aliases": ["json web token", "json web tokens"]},
+      "ssl/tls":          {"level": "intermediate", "aliases": ["tls", "ssl", "https"]},
+      "penetration testing":{"level":"intermediate","aliases": ["pentest", "pen testing", "ethical hacking"]},
+      "siem":             {"level": "intermediate", "aliases": []}
+    },
+    "tools": {
+      "git":              {"level": "beginner",     "aliases": ["github", "gitlab", "version control"]},
+      "jira":             {"level": "beginner",     "aliases": ["atlassian jira"]},
+      "confluence":       {"level": "beginner",     "aliases": []},
+      "postman":          {"level": "beginner",     "aliases": []},
+      "swagger":          {"level": "beginner",     "aliases": ["openapi", "open api"]},
+      "graphql":          {"level": "intermediate", "aliases": ["graph ql"]},
+      "rest api":         {"level": "beginner",     "aliases": ["restful", "restful api", "rest"]},
+      "microservices":    {"level": "intermediate", "aliases": ["microservice architecture"]},
+      "kafka":            {"level": "intermediate", "aliases": ["apache kafka", "event streaming"]},
+      "rabbitmq":         {"level": "intermediate", "aliases": ["rabbit mq", "message queue", "amqp"]}
+    }
+  }
+}
