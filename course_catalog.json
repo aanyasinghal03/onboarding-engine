@@ -1,0 +1,495 @@
+{
+  "_meta": {
+    "description": "Locked course catalog. roadmap.py ONLY recommends courses from this file. No free-text generation.",
+    "sources": ["Coursera", "edX", "Udemy", "freeCodeCamp", "LinkedIn Learning", "Google", "AWS", "Microsoft", "Pluralsight", "Khan Academy", "YouTube EDU"],
+    "last_updated": "2025"
+  },
+  "courses": {
+    "python": [
+      {
+        "id": "PY001",
+        "title": "Python for Everybody Specialization",
+        "provider": "Coursera / University of Michigan",
+        "instructor": "Dr. Charles Severance",
+        "url": "https://www.coursera.org/specializations/python",
+        "level": "beginner",
+        "duration_hours": 32,
+        "free_audit": true
+      },
+      {
+        "id": "PY002",
+        "title": "The Complete Python Bootcamp From Zero to Hero",
+        "provider": "Udemy",
+        "instructor": "Jose Portilla",
+        "url": "https://www.udemy.com/course/complete-python-bootcamp/",
+        "level": "intermediate",
+        "duration_hours": 22,
+        "free_audit": false
+      },
+      {
+        "id": "PY003",
+        "title": "Python Programming — freeCodeCamp Full Course",
+        "provider": "freeCodeCamp / YouTube",
+        "instructor": "freeCodeCamp",
+        "url": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+        "level": "beginner",
+        "duration_hours": 4,
+        "free_audit": true
+      }
+    ],
+    "javascript": [
+      {
+        "id": "JS001",
+        "title": "The Complete JavaScript Course 2024: From Zero to Expert",
+        "provider": "Udemy",
+        "instructor": "Jonas Schmedtmann",
+        "url": "https://www.udemy.com/course/the-complete-javascript-course/",
+        "level": "beginner",
+        "duration_hours": 69,
+        "free_audit": false
+      },
+      {
+        "id": "JS002",
+        "title": "JavaScript Algorithms and Data Structures",
+        "provider": "freeCodeCamp",
+        "instructor": "freeCodeCamp",
+        "url": "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/",
+        "level": "intermediate",
+        "duration_hours": 30,
+        "free_audit": true
+      }
+    ],
+    "react": [
+      {
+        "id": "RE001",
+        "title": "React — The Complete Guide 2024 (incl. React Router & Redux)",
+        "provider": "Udemy",
+        "instructor": "Maximilian Schwarzmüller",
+        "url": "https://www.udemy.com/course/react-the-complete-guide-incl-redux/",
+        "level": "beginner",
+        "duration_hours": 68,
+        "free_audit": false
+      },
+      {
+        "id": "RE002",
+        "title": "Full Stack Open — React & Node",
+        "provider": "University of Helsinki",
+        "instructor": "University of Helsinki",
+        "url": "https://fullstackopen.com/en/",
+        "level": "intermediate",
+        "duration_hours": 40,
+        "free_audit": true
+      }
+    ],
+    "docker": [
+      {
+        "id": "DO001",
+        "title": "Docker and Kubernetes: The Complete Guide",
+        "provider": "Udemy",
+        "instructor": "Stephen Grider",
+        "url": "https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/",
+        "level": "beginner",
+        "duration_hours": 22,
+        "free_audit": false
+      },
+      {
+        "id": "DO002",
+        "title": "Docker Deep Dive",
+        "provider": "Pluralsight",
+        "instructor": "Nigel Poulton",
+        "url": "https://www.pluralsight.com/courses/docker-deep-dive-update",
+        "level": "intermediate",
+        "duration_hours": 5,
+        "free_audit": false
+      }
+    ],
+    "kubernetes": [
+      {
+        "id": "KU001",
+        "title": "Kubernetes for the Absolute Beginners — Hands-On",
+        "provider": "Udemy",
+        "instructor": "Mumshad Mannambeth",
+        "url": "https://www.udemy.com/course/learn-kubernetes/",
+        "level": "beginner",
+        "duration_hours": 6,
+        "free_audit": false
+      },
+      {
+        "id": "KU002",
+        "title": "Certified Kubernetes Administrator (CKA) with Practice Tests",
+        "provider": "Udemy",
+        "instructor": "Mumshad Mannambeth",
+        "url": "https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/",
+        "level": "intermediate",
+        "duration_hours": 17,
+        "free_audit": false
+      }
+    ],
+    "aws": [
+      {
+        "id": "AW001",
+        "title": "AWS Certified Cloud Practitioner — Complete Course",
+        "provider": "freeCodeCamp / YouTube",
+        "instructor": "Andrew Brown",
+        "url": "https://www.youtube.com/watch?v=SOTamWNgDKc",
+        "level": "beginner",
+        "duration_hours": 13,
+        "free_audit": true
+      },
+      {
+        "id": "AW002",
+        "title": "Ultimate AWS Certified Solutions Architect Associate 2024",
+        "provider": "Udemy",
+        "instructor": "Stephane Maarek",
+        "url": "https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/",
+        "level": "intermediate",
+        "duration_hours": 27,
+        "free_audit": false
+      },
+      {
+        "id": "AW003",
+        "title": "AWS Cloud Practitioner Essentials",
+        "provider": "AWS Skill Builder",
+        "instructor": "Amazon Web Services",
+        "url": "https://explore.skillbuilder.aws/learn/course/external/view/elearning/134/aws-cloud-practitioner-essentials",
+        "level": "beginner",
+        "duration_hours": 6,
+        "free_audit": true
+      }
+    ],
+    "machine learning": [
+      {
+        "id": "ML001",
+        "title": "Machine Learning Specialization",
+        "provider": "Coursera / DeepLearning.AI",
+        "instructor": "Andrew Ng",
+        "url": "https://www.coursera.org/specializations/machine-learning-introduction",
+        "level": "beginner",
+        "duration_hours": 92,
+        "free_audit": true
+      },
+      {
+        "id": "ML002",
+        "title": "Machine Learning A-Z: AI, Python & R",
+        "provider": "Udemy",
+        "instructor": "Kirill Eremenko & Hadelin de Ponteves",
+        "url": "https://www.udemy.com/course/machinelearning/",
+        "level": "intermediate",
+        "duration_hours": 44,
+        "free_audit": false
+      }
+    ],
+    "deep learning": [
+      {
+        "id": "DL001",
+        "title": "Deep Learning Specialization",
+        "provider": "Coursera / DeepLearning.AI",
+        "instructor": "Andrew Ng",
+        "url": "https://www.coursera.org/specializations/deep-learning",
+        "level": "intermediate",
+        "duration_hours": 80,
+        "free_audit": true
+      }
+    ],
+    "sql": [
+      {
+        "id": "SQ001",
+        "title": "The Complete SQL Bootcamp: Go from Zero to Hero",
+        "provider": "Udemy",
+        "instructor": "Jose Portilla",
+        "url": "https://www.udemy.com/course/the-complete-sql-bootcamp/",
+        "level": "beginner",
+        "duration_hours": 9,
+        "free_audit": false
+      },
+      {
+        "id": "SQ002",
+        "title": "SQL for Data Science",
+        "provider": "Coursera / UC Davis",
+        "instructor": "Sadie St. Lawrence",
+        "url": "https://www.coursera.org/learn/sql-for-data-science",
+        "level": "beginner",
+        "duration_hours": 16,
+        "free_audit": true
+      }
+    ],
+    "postgresql": [
+      {
+        "id": "PG001",
+        "title": "SQL and PostgreSQL: The Complete Developer's Guide",
+        "provider": "Udemy",
+        "instructor": "Stephen Grider",
+        "url": "https://www.udemy.com/course/sql-and-postgresql/",
+        "level": "intermediate",
+        "duration_hours": 22,
+        "free_audit": false
+      }
+    ],
+    "git": [
+      {
+        "id": "GT001",
+        "title": "Git & GitHub Crash Course For Beginners",
+        "provider": "freeCodeCamp / YouTube",
+        "instructor": "Traversy Media",
+        "url": "https://www.youtube.com/watch?v=SWYqp7iY_Tc",
+        "level": "beginner",
+        "duration_hours": 1,
+        "free_audit": true
+      },
+      {
+        "id": "GT002",
+        "title": "The Git & Github Bootcamp",
+        "provider": "Udemy",
+        "instructor": "Colt Steele",
+        "url": "https://www.udemy.com/course/git-and-github-bootcamp/",
+        "level": "beginner",
+        "duration_hours": 17,
+        "free_audit": false
+      }
+    ],
+    "agile": [
+      {
+        "id": "AG001",
+        "title": "Agile Fundamentals: Including Scrum & Kanban",
+        "provider": "Udemy",
+        "instructor": "Edu Lomas",
+        "url": "https://www.udemy.com/course/agile-fundamentals-including-scrum-kanban/",
+        "level": "beginner",
+        "duration_hours": 3,
+        "free_audit": false
+      },
+      {
+        "id": "AG002",
+        "title": "Project Management Principles and Practices Specialization",
+        "provider": "Coursera / UC Irvine",
+        "instructor": "Margaret Meloni",
+        "url": "https://www.coursera.org/specializations/project-management",
+        "level": "beginner",
+        "duration_hours": 40,
+        "free_audit": true
+      }
+    ],
+    "tensorflow": [
+      {
+        "id": "TF001",
+        "title": "TensorFlow Developer Certificate in 2024: Zero to Mastery",
+        "provider": "Udemy",
+        "instructor": "Daniel Bourke",
+        "url": "https://www.udemy.com/course/tensorflow-developer-certificate-machine-learning-zero-to-mastery/",
+        "level": "intermediate",
+        "duration_hours": 64,
+        "free_audit": false
+      }
+    ],
+    "pytorch": [
+      {
+        "id": "PT001",
+        "title": "PyTorch for Deep Learning & Machine Learning — freeCodeCamp",
+        "provider": "freeCodeCamp / YouTube",
+        "instructor": "Daniel Bourke",
+        "url": "https://www.youtube.com/watch?v=V_xro1bcAuA",
+        "level": "intermediate",
+        "duration_hours": 26,
+        "free_audit": true
+      }
+    ],
+    "cybersecurity": [
+      {
+        "id": "CS001",
+        "title": "Google Cybersecurity Certificate",
+        "provider": "Coursera / Google",
+        "instructor": "Google",
+        "url": "https://www.coursera.org/professional-certificates/google-cybersecurity",
+        "level": "beginner",
+        "duration_hours": 182,
+        "free_audit": true
+      },
+      {
+        "id": "CS002",
+        "title": "Introduction to Cyber Security Specialization",
+        "provider": "Coursera / NYU",
+        "instructor": "Edward Amoroso",
+        "url": "https://www.coursera.org/specializations/intro-cyber-security",
+        "level": "beginner",
+        "duration_hours": 48,
+        "free_audit": true
+      }
+    ],
+    "data analysis": [
+      {
+        "id": "DA001",
+        "title": "Google Data Analytics Certificate",
+        "provider": "Coursera / Google",
+        "instructor": "Google",
+        "url": "https://www.coursera.org/professional-certificates/google-data-analytics",
+        "level": "beginner",
+        "duration_hours": 240,
+        "free_audit": true
+      },
+      {
+        "id": "DA002",
+        "title": "Data Analysis with Python",
+        "provider": "freeCodeCamp",
+        "instructor": "freeCodeCamp",
+        "url": "https://www.freecodecamp.org/learn/data-analysis-with-python/",
+        "level": "beginner",
+        "duration_hours": 20,
+        "free_audit": true
+      }
+    ],
+    "project management": [
+      {
+        "id": "PM001",
+        "title": "Google Project Management Certificate",
+        "provider": "Coursera / Google",
+        "instructor": "Google",
+        "url": "https://www.coursera.org/professional-certificates/google-project-management",
+        "level": "beginner",
+        "duration_hours": 180,
+        "free_audit": true
+      },
+      {
+        "id": "PM002",
+        "title": "PMP Exam Prep Seminar — PMBOK Guide 6",
+        "provider": "Udemy",
+        "instructor": "Joseph Phillips",
+        "url": "https://www.udemy.com/course/pmp-pmbok6-21-contact-hours/",
+        "level": "intermediate",
+        "duration_hours": 21,
+        "free_audit": false
+      }
+    ],
+    "communication": [
+      {
+        "id": "CO001",
+        "title": "Improving Communication Skills",
+        "provider": "Coursera / University of Pennsylvania",
+        "instructor": "Dr. Jonah Berger",
+        "url": "https://www.coursera.org/learn/wharton-communication-skills",
+        "level": "beginner",
+        "duration_hours": 8,
+        "free_audit": true
+      }
+    ],
+    "leadership": [
+      {
+        "id": "LE001",
+        "title": "Inspiring and Motivating Individuals",
+        "provider": "Coursera / University of Michigan",
+        "instructor": "Scott DeRue",
+        "url": "https://www.coursera.org/learn/motivate-people-teams",
+        "level": "intermediate",
+        "duration_hours": 16,
+        "free_audit": true
+      }
+    ],
+    "tableau": [
+      {
+        "id": "TB001",
+        "title": "Tableau 2024 A-Z: Hands-On Tableau Training for Data Science",
+        "provider": "Udemy",
+        "instructor": "Kirill Eremenko",
+        "url": "https://www.udemy.com/course/tableu/",
+        "level": "beginner",
+        "duration_hours": 9,
+        "free_audit": false
+      }
+    ],
+    "excel": [
+      {
+        "id": "EX001",
+        "title": "Microsoft Excel — Excel from Beginner to Advanced",
+        "provider": "Udemy",
+        "instructor": "Kyle Pew",
+        "url": "https://www.udemy.com/course/microsoft-excel-2013-from-beginner-to-advanced-and-beyond/",
+        "level": "beginner",
+        "duration_hours": 19,
+        "free_audit": false
+      }
+    ],
+    "first aid": [
+      {
+        "id": "FA001",
+        "title": "First Aid, CPR and AED Standard",
+        "provider": "Coursera / American Heart Association",
+        "instructor": "American Heart Association",
+        "url": "https://www.coursera.org/learn/firstaidcpr",
+        "level": "beginner",
+        "duration_hours": 8,
+        "free_audit": true
+      }
+    ],
+    "patient care": [
+      {
+        "id": "PC001",
+        "title": "Patient Safety and Quality Improvement",
+        "provider": "Coursera / Johns Hopkins",
+        "instructor": "Peter Pronovost",
+        "url": "https://www.coursera.org/learn/patient-safety",
+        "level": "beginner",
+        "duration_hours": 16,
+        "free_audit": true
+      }
+    ],
+    "supply chain": [
+      {
+        "id": "SC001",
+        "title": "Supply Chain Fundamentals",
+        "provider": "edX / MIT",
+        "instructor": "MIT",
+        "url": "https://www.edx.org/learn/supply-chain-management/massachusetts-institute-of-technology-supply-chain-fundamentals",
+        "level": "beginner",
+        "duration_hours": 40,
+        "free_audit": true
+      }
+    ],
+    "quality control": [
+      {
+        "id": "QC001",
+        "title": "Six Sigma and the Organization",
+        "provider": "Coursera / University System of Georgia",
+        "instructor": "Bill Bailey",
+        "url": "https://www.coursera.org/learn/six-sigma-organization",
+        "level": "beginner",
+        "duration_hours": 12,
+        "free_audit": true
+      }
+    ],
+    "nlp": [
+      {
+        "id": "NL001",
+        "title": "Natural Language Processing Specialization",
+        "provider": "Coursera / DeepLearning.AI",
+        "instructor": "Younes Bensouda Mourri",
+        "url": "https://www.coursera.org/specializations/natural-language-processing",
+        "level": "intermediate",
+        "duration_hours": 80,
+        "free_audit": true
+      }
+    ],
+    "linux": [
+      {
+        "id": "LX001",
+        "title": "The Linux Command Line Bootcamp: Beginner to Power User",
+        "provider": "Udemy",
+        "instructor": "Colt Steele",
+        "url": "https://www.udemy.com/course/the-linux-command-line-bootcamp/",
+        "level": "beginner",
+        "duration_hours": 14,
+        "free_audit": false
+      }
+    ],
+    "default": [
+      {
+        "id": "GEN001",
+        "title": "Learning How to Learn",
+        "provider": "Coursera / UC San Diego",
+        "instructor": "Dr. Barbara Oakley",
+        "url": "https://www.coursera.org/learn/learning-how-to-learn",
+        "level": "beginner",
+        "duration_hours": 15,
+        "free_audit": true
+      }
+    ]
+  }
+}
