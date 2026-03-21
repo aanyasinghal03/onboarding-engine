@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <title>SkillBridge — AI Skill Gap Analyzer</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -12,55 +12,41 @@
   --sur:#0f1e3d;--sur2:#162448;
   --b:rgba(56,189,248,.1);--b2:rgba(56,189,248,.2);
   --c:#38bdf8;--c2:#7dd3fc;--p:#818cf8;--p2:#a5b4fc;
-  --g:#4ade80;--r:#f87171;--o:#fb923c;--gold:#e8b84b;
+  --g:#4ade80;--r:#f87171;--o:#fb923c;
   --tx:#e8edf8;--mu:#5a6a90;--mu2:#8897b8;
   --serif:'Cormorant Garamond',serif;
   --sans:'Outfit',sans-serif;--mono:'Fira Code',monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:var(--sans);background:var(--bg);color:var(--tx);font-size:14px;}
-
-/* particles canvas */
-#cv{position:fixed;inset:0;pointer-events:none;z-index:0;}
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 70% 60% at 20% 10%,rgba(56,189,248,.06) 0%,transparent 55%),
-    radial-gradient(ellipse 50% 50% at 85% 80%,rgba(129,140,248,.07) 0%,transparent 55%);
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--tx);
+  font-size:15px;min-height:100vh;overflow-x:hidden;
 }
-body::after{
-  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+canvas#cv{position:fixed;inset:0;pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 60% at 20% 10%,rgba(56,189,248,.06) 0%,transparent 55%),
+             radial-gradient(ellipse 50% 50% at 85% 80%,rgba(129,140,248,.07) 0%,transparent 55%);}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(rgba(56,189,248,.02) 1px,transparent 1px),
     linear-gradient(90deg,rgba(56,189,248,.02) 1px,transparent 1px);
-  background-size:52px 52px;
-}
-
-/* ── LAYOUT ── */
-.app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1;}
+  background-size:52px 52px;}
 
 /* ── NAV ── */
 nav{
+  position:sticky;top:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:52px;flex-shrink:0;
-  background:rgba(4,9,26,.88);
+  padding:0 16px;height:52px;
+  background:rgba(4,9,26,.92);
   border-bottom:1px solid var(--b);
   backdrop-filter:blur(20px);
 }
-.logo{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:19px;font-weight:700;}
-.logo-hex{color:var(--c);font-size:16px;}
+.logo{display:flex;align-items:center;gap:7px;font-family:var(--serif);font-size:20px;font-weight:700;}
+.logo-hex{color:var(--c);}
 .logo-text{background:linear-gradient(135deg,#fff 40%,var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.nav-mid{display:flex;gap:0;}
-.nav-mid a{
-  padding:0 16px;height:52px;display:flex;align-items:center;
-  font-size:12px;font-weight:400;color:var(--mu2);
-  text-decoration:none;cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .2s;
-}
-.nav-mid a:hover{color:var(--tx);border-bottom-color:rgba(56,189,248,.4);}
-.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-links{display:flex;align-items:center;gap:8px;}
 .status-pill{
-  display:flex;align-items:center;gap:5px;
+  display:flex;align-items:center;gap:4px;
   font-family:var(--mono);font-size:9px;color:var(--g);
   background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);
   padding:4px 10px;border-radius:100px;
@@ -69,13 +55,38 @@ nav{
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 .nav-cta{
   background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:#04091a;
-  font-size:12px;font-weight:700;padding:7px 18px;border-radius:7px;border:none;
-  cursor:pointer;box-shadow:0 0 16px rgba(56,189,248,.3);transition:all .2s;
+  font-size:12px;font-weight:700;padding:7px 16px;border-radius:7px;border:none;
+  cursor:pointer;box-shadow:0 0 14px rgba(56,189,248,.3);white-space:nowrap;
 }
-.nav-cta:hover{box-shadow:0 0 26px rgba(56,189,248,.5);transform:translateY(-1px);}
+/* hide nav links on small screens */
+.nav-desktop{display:flex;gap:0;}
+.nav-desktop a{padding:0 14px;height:52px;display:flex;align-items:center;
+  font-size:12px;color:var(--mu2);text-decoration:none;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;}
+.nav-desktop a:hover{color:var(--tx);border-bottom-color:rgba(56,189,248,.4);}
 
-/* ── BODY SPLIT ── */
-.body{display:flex;flex:1;overflow:hidden;}
+/* ── MOBILE VIEW SWITCHER ── */
+.mobile-switcher{
+  display:none;
+  position:sticky;top:52px;z-index:100;
+  background:rgba(4,9,26,.95);
+  border-bottom:1px solid var(--b);
+  backdrop-filter:blur(16px);
+}
+.ms-inner{display:flex;padding:8px 16px;gap:6px;}
+.ms-btn{
+  flex:1;padding:10px 8px;border-radius:9px;border:1px solid var(--b);
+  background:transparent;color:var(--mu2);font-family:var(--sans);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.ms-btn.active{background:rgba(56,189,248,.12);border-color:var(--b2);color:var(--c);}
+
+/* ── LAYOUT ── */
+.app-body{
+  display:flex;
+  position:relative;z-index:1;
+  min-height:calc(100vh - 52px);
+}
 
 /* ── LEFT PANEL ── */
 .left{
@@ -83,227 +94,166 @@ nav{
   display:flex;flex-direction:column;
   background:rgba(7,17,40,.7);
   border-right:1px solid var(--b);
+  position:sticky;top:52px;
+  height:calc(100vh - 52px);
   overflow-y:auto;
 }
-.left::-webkit-scrollbar{width:4px;}
+.left::-webkit-scrollbar{width:3px;}
 .left::-webkit-scrollbar-thumb{background:var(--sur2);border-radius:2px;}
-
 .panel-head{
-  padding:18px 20px 14px;
-  border-bottom:1px solid var(--b);
-  background:rgba(4,9,26,.6);
-  flex-shrink:0;
+  padding:16px 18px 12px;border-bottom:1px solid var(--b);
+  background:rgba(4,9,26,.6);flex-shrink:0;
 }
-.panel-title{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--tx);margin-bottom:3px;}
+.panel-title{font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:2px;}
 .panel-sub{font-size:11px;color:var(--mu2);font-weight:300;}
-
-.left-inner{padding:16px;display:flex;flex-direction:column;gap:14px;}
+.left-inner{padding:14px;display:flex;flex-direction:column;gap:12px;}
 
 /* domain strip */
-.domain-strip{display:flex;gap:6px;flex-wrap:wrap;}
+.domain-strip{display:flex;gap:5px;flex-wrap:wrap;}
 .dom-btn{
-  padding:5px 11px;border-radius:100px;border:1px solid var(--b);
-  background:transparent;color:var(--mu2);font-size:10px;font-family:var(--mono);
-  cursor:pointer;transition:all .2s;letter-spacing:.06em;
+  padding:6px 12px;border-radius:100px;border:1px solid var(--b);
+  background:transparent;color:var(--mu2);font-size:11px;font-family:var(--mono);
+  cursor:pointer;transition:all .2s;min-height:36px;
 }
-.dom-btn:hover{border-color:var(--b2);color:var(--tx);}
 .dom-btn.active{background:rgba(56,189,248,.1);border-color:var(--b2);color:var(--c);}
 
 /* drop zone */
 .dz{
   border:1.5px dashed rgba(56,189,248,.25);border-radius:12px;
-  padding:20px 16px;text-align:center;cursor:pointer;
+  padding:18px 14px;text-align:center;cursor:pointer;
   background:rgba(15,30,61,.4);transition:all .25s;position:relative;overflow:hidden;
+  -webkit-user-select:none;user-select:none;
 }
-.dz::before{
-  content:'';position:absolute;inset:0;
+.dz::before{content:'';position:absolute;inset:0;
   background:radial-gradient(circle at 50% 100%,rgba(56,189,248,.08),transparent 65%);
-  opacity:0;transition:opacity .3s;
-}
+  opacity:0;transition:opacity .3s;}
 .dz:hover::before,.dz.over::before{opacity:1;}
-.dz:hover,.dz.over{border-color:var(--c);transform:translateY(-2px);box-shadow:0 8px 32px rgba(56,189,248,.1);}
+.dz:hover,.dz.over{border-color:var(--c);}
 .dz.got{border-color:rgba(74,222,128,.4);border-style:solid;background:rgba(74,222,128,.04);}
-.dz-icon{font-size:24px;margin-bottom:8px;display:block;}
-.dz-title{font-family:var(--serif);font-size:14px;font-weight:600;margin-bottom:3px;}
+.dz-icon{font-size:26px;margin-bottom:6px;display:block;}
+.dz-title{font-family:var(--serif);font-size:14px;font-weight:600;margin-bottom:2px;}
 .dz-sub{font-size:10px;color:var(--mu);}
-.dz-fname{
-  margin-top:8px;font-family:var(--mono);font-size:9px;
-  color:var(--g);background:rgba(74,222,128,.08);
-  padding:3px 10px;border-radius:100px;display:none;
-  border:1px solid rgba(74,222,128,.2);
-}
+.dz-fname{margin-top:7px;font-family:var(--mono);font-size:9px;color:var(--g);
+  background:rgba(74,222,128,.08);padding:3px 10px;border-radius:100px;
+  display:none;border:1px solid rgba(74,222,128,.2);}
 input[type=file]{display:none;}
 
 /* analyze button */
 .analyze-btn{
-  width:100%;padding:13px;font-family:var(--serif);font-size:15px;font-weight:700;
+  width:100%;padding:14px;font-family:var(--serif);font-size:16px;font-weight:700;
   background:linear-gradient(135deg,#0ea5e9,#38bdf8,#0284c7);
   color:#04091a;border:none;border-radius:10px;cursor:pointer;
   box-shadow:0 0 20px rgba(56,189,248,.25),inset 0 1px 0 rgba(255,255,255,.2);
-  transition:all .25s;position:relative;overflow:hidden;
+  transition:all .25s;min-height:52px;
 }
-.analyze-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 60%);
-  opacity:0;transition:opacity .25s;
-}
-.analyze-btn:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(56,189,248,.42);}
-.analyze-btn:hover::before{opacity:1;}
-.analyze-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;}
-
-/* error */
-.err-box{
-  display:none;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);
-  border-radius:10px;padding:10px 14px;color:var(--r);font-size:11px;
-}
+.analyze-btn:disabled{opacity:.35;cursor:not-allowed;}
+.err-box{display:none;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);
+  border-radius:10px;padding:10px 14px;color:var(--r);font-size:11px;line-height:1.5;}
 .err-box.on{display:block;}
 
 /* left stats */
-.left-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.ls-card{
-  background:rgba(15,30,61,.5);border:1px solid var(--b);
-  border-radius:10px;padding:10px 12px;
-}
+.left-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.ls-card{background:rgba(15,30,61,.5);border:1px solid var(--b);border-radius:10px;padding:10px 12px;}
 .ls-num{font-family:var(--serif);font-size:18px;font-weight:700;line-height:1;}
 .ls-num.c{color:var(--c);}.ls-num.g{color:var(--g);}.ls-num.r{color:var(--r);}.ls-num.p{color:var(--p2);}
 .ls-lbl{font-size:9px;color:var(--mu);letter-spacing:.05em;margin-top:3px;text-transform:uppercase;}
 
-/* how it works mini */
-.how-card{
-  background:rgba(15,30,61,.4);border:1px solid var(--b);
-  border-radius:10px;padding:12px;
-}
-.how-title{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--c);text-transform:uppercase;margin-bottom:10px;}
+.how-card{background:rgba(15,30,61,.4);border:1px solid var(--b);border-radius:10px;padding:12px;}
+.how-title{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--c);text-transform:uppercase;margin-bottom:8px;}
 .how-step{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;}
 .how-step:last-child{margin-bottom:0;}
-.how-num{
-  width:18px;height:18px;border-radius:50%;flex-shrink:0;
+.how-num{width:18px;height:18px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--mono);font-size:8px;
-  background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:var(--c);
-}
+  background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:var(--c);}
 .how-text{font-size:10px;color:var(--mu2);line-height:1.5;}
 
 /* ── RIGHT PANEL ── */
-.right{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;
-}
-
-/* results top bar */
+.right{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
 .results-topbar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 22px;
-  background:rgba(4,9,26,.6);border-bottom:1px solid var(--b);
-  flex-shrink:0;
+  padding:9px 18px;background:rgba(4,9,26,.6);border-bottom:1px solid var(--b);flex-shrink:0;
 }
 .rtb-title{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mu);text-transform:uppercase;}
-.rtb-right{display:flex;align-items:center;gap:8px;}
-.processing-pill{
-  display:none;align-items:center;gap:5px;
-  font-family:var(--mono);font-size:9px;color:var(--c);
-  background:rgba(56,189,248,.08);border:1px solid var(--b2);
-  padding:4px 10px;border-radius:100px;
-}
+.processing-pill{display:none;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;
+  color:var(--c);background:rgba(56,189,248,.08);border:1px solid var(--b2);padding:4px 10px;border-radius:100px;}
 .processing-pill.on{display:flex;}
-.proc-ring{
-  width:10px;height:10px;border-radius:50%;
-  border:1.5px solid rgba(56,189,248,.2);border-top-color:var(--c);
-  animation:spin 1s linear infinite;
-}
+.proc-ring{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(56,189,248,.2);
+  border-top-color:var(--c);animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* tabs */
+/* result tabs */
 .tab-bar{
-  display:flex;gap:3px;padding:8px 16px;
+  display:flex;gap:2px;padding:6px 12px;
   background:rgba(7,17,40,.5);border-bottom:1px solid var(--b);
-  flex-shrink:0;overflow-x:auto;
+  flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
 .tab-bar::-webkit-scrollbar{height:0;}
-.tbtn{
-  padding:7px 14px;border:none;border-radius:8px;
-  font-family:var(--sans);font-size:11px;font-weight:500;
-  cursor:pointer;background:transparent;color:var(--mu2);
-  transition:all .2s;white-space:nowrap;letter-spacing:.02em;
-}
+.tbtn{padding:7px 12px;border:none;border-radius:7px;font-family:var(--sans);font-size:11px;
+  font-weight:500;cursor:pointer;background:transparent;color:var(--mu2);
+  transition:all .2s;white-space:nowrap;min-height:34px;}
 .tbtn:hover{color:var(--tx);}
-.tbtn.on{background:var(--sur2);color:var(--tx);box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.tbtn.on{background:var(--sur2);color:var(--tx);}
 
-/* results content area */
-.results-body{flex:1;overflow-y:auto;padding:18px 22px;}
-.results-body::-webkit-scrollbar{width:5px;}
-.results-body::-webkit-scrollbar-thumb{background:var(--sur2);border-radius:3px;}
+.results-body{flex:1;overflow-y:auto;padding:16px 18px;-webkit-overflow-scrolling:touch;}
+.results-body::-webkit-scrollbar{width:4px;}
+.results-body::-webkit-scrollbar-thumb{background:var(--sur2);border-radius:2px;}
 
-.tp{display:none;animation:fadeUp .35s ease;}
+.tp{display:none;animation:fadeUp .3s ease;}
 .tp.on{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* empty state */
-.empty{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100%;gap:16px;padding:40px;text-align:center;
-}
-.empty-icon{font-size:48px;opacity:.3;}
-.empty-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--mu2);}
-.empty-sub{font-size:12px;color:var(--mu);max-width:300px;line-height:1.7;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:300px;gap:14px;padding:32px 20px;text-align:center;}
+.empty-icon{font-size:44px;opacity:.3;}
+.empty-title{font-family:var(--serif);font-size:20px;color:var(--mu2);}
+.empty-sub{font-size:12px;color:var(--mu);max-width:280px;line-height:1.7;}
+.empty-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px;}
+.empty-tag{font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:100px;border:1px solid;}
 
 /* ── RESULTS COMPONENTS ── */
-
-/* impact banner */
 .impact-banner{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
-  padding:14px;border-radius:14px;margin-bottom:16px;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
+  padding:12px;border-radius:12px;margin-bottom:14px;
   background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(129,140,248,.05));
   border:1px solid rgba(56,189,248,.18);
 }
 .ib-item{text-align:center;}
-.ib-num{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1;}
+.ib-num{font-family:var(--serif);font-size:18px;font-weight:700;line-height:1;}
 .ib-num.c{color:var(--c2);}.ib-num.g{color:var(--g);}.ib-num.p{color:var(--p2);}
-.ib-lbl{font-size:9px;color:var(--mu);margin-top:3px;letter-spacing:.05em;text-transform:uppercase;}
+.ib-lbl{font-size:8px;color:var(--mu);margin-top:2px;letter-spacing:.04em;text-transform:uppercase;}
 
-/* summary card */
-.sum-card{
-  background:var(--sur);border:1px solid var(--b);border-radius:14px;
-  padding:18px;margin-bottom:14px;position:relative;overflow:hidden;
-}
-.sum-card::after{
-  content:'';position:absolute;top:-50px;right:-50px;
-  width:180px;height:180px;border-radius:50%;
-  background:radial-gradient(circle,rgba(56,189,248,.08),transparent 70%);
-  pointer-events:none;
-}
-.sum-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px;}
-.sum-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--c);text-transform:uppercase;margin-bottom:6px;}
-.sum-val{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.2;}
+.sum-card{background:var(--sur);border:1px solid var(--b);border-radius:14px;
+  padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.sum-card::after{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;
+  border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.08),transparent 70%);pointer-events:none;}
+.sum-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.sum-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--c);text-transform:uppercase;margin-bottom:5px;}
+.sum-val{font-family:var(--serif);font-size:18px;font-weight:700;line-height:1.2;}
 .sum-val em{font-style:normal;color:var(--c2);}
-.ring{width:90px;height:90px;flex-shrink:0;position:relative;}
+.ring{width:84px;height:84px;flex-shrink:0;position:relative;}
 .ring svg{transform:rotate(-90deg);}
 .rb{fill:none;stroke:var(--bg3);stroke-width:9;}
 .rf{fill:none;stroke:var(--c);stroke-width:9;stroke-linecap:round;
-    stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);}
+  stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);}
 .ri{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);}
-.rp{font-size:16px;font-weight:500;}
-.rs{font-size:8px;color:var(--mu);letter-spacing:.1em;}
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.sg-item{background:var(--bg3);border-radius:8px;padding:10px 12px;border:1px solid var(--b);}
-.sg-num{font-family:var(--serif);font-size:18px;font-weight:700;line-height:1;margin-bottom:2px;}
+.rp{font-size:15px;font-weight:500;}.rs{font-size:8px;color:var(--mu);letter-spacing:.1em;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.sg-item{background:var(--bg3);border-radius:8px;padding:9px 10px;border:1px solid var(--b);}
+.sg-num{font-family:var(--serif);font-size:16px;font-weight:700;line-height:1;margin-bottom:2px;}
 .sg-num.c{color:var(--c);}.sg-num.g{color:var(--g);}.sg-num.r{color:var(--r);}.sg-num.p{color:var(--p2);}
-.sg-lbl{font-size:9px;color:var(--mu);letter-spacing:.04em;}
+.sg-lbl{font-size:8px;color:var(--mu);letter-spacing:.03em;}
 
-/* section header */
-.sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:6px;}
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:4px;}
 .sh-line{flex:1;height:1px;background:var(--b);}
 .sh-txt{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--c);text-transform:uppercase;white-space:nowrap;}
 
-/* skill chips */
-.chips{display:flex;flex-wrap:wrap;gap:7px;}
-.chip{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 12px;border-radius:100px;
-  font-size:11px;font-weight:500;border:1px solid;
-  transition:transform .15s;animation:popIn .3s ease both;
-}
-.chip:hover{transform:translateY(-1px);}
-@keyframes popIn{from{opacity:0;transform:scale(.84)}to{opacity:1;transform:scale(1)}}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:100px;
+  font-size:11px;font-weight:500;border:1px solid;animation:popIn .3s ease both;}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 .chip.res{background:rgba(61,214,200,.07);border-color:rgba(61,214,200,.28);color:#3dd6c8;}
 .chip.jd{background:rgba(56,189,248,.07);border-color:rgba(56,189,248,.28);color:var(--c2);}
 .chip.miss{background:rgba(248,113,113,.07);border-color:rgba(248,113,113,.28);color:var(--r);}
@@ -313,28 +263,33 @@ input[type=file]{display:none;}
 .cconf{font-family:var(--mono);font-size:9px;opacity:.45;}
 
 /* roadmap */
-.rm-list{display:flex;flex-direction:column;gap:10px;}
-.rmc{
-  background:var(--sur);border:1px solid var(--b);border-radius:12px;
-  overflow:hidden;transition:border-color .2s;
-}
+.progress-tracker{background:var(--sur);border:1px solid var(--b);border-radius:10px;
+  padding:12px 14px;margin-bottom:12px;}
+.pt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;flex-wrap:wrap;gap:6px;}
+.pt-title{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--c);text-transform:uppercase;}
+.pt-count{font-family:var(--serif);font-size:15px;font-weight:600;}
+.pt-pct{font-family:var(--mono);font-size:13px;color:var(--c);}
+.prog-wrap{background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;margin-bottom:6px;}
+.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--c),var(--g));transition:width 1s ease;}
+.pt-hours{display:flex;gap:12px;font-size:10px;color:var(--mu);flex-wrap:wrap;}
+.pt-hours strong{color:var(--tx);}
+
+.rm-list{display:flex;flex-direction:column;gap:9px;}
+.rmc{background:var(--sur);border:1px solid var(--b);border-radius:12px;overflow:hidden;transition:border-color .2s;}
 .rmc:hover{border-color:var(--b2);}
-.rmc.done{border-color:rgba(74,222,128,.2);background:rgba(74,222,128,.02);}
-.rmh{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;}
-.rmo{
-  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+.rmc.done{border-color:rgba(74,222,128,.2);}
+.rmh{display:flex;align-items:center;gap:9px;padding:12px 14px;cursor:pointer;user-select:none;min-height:56px;}
+.rmo{width:28px;height:28px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--mono);font-size:9px;
-  background:var(--bg3);border:1px solid var(--b);color:var(--c);
-}
+  background:var(--bg3);border:1px solid var(--b);color:var(--c);}
 .rmo.done{background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:var(--g);}
 .rmi{flex:1;min-width:0;}
-.rms{font-family:var(--serif);font-size:14px;font-weight:600;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.rmt{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
-.rtag{
-  font-family:var(--mono);font-size:8px;letter-spacing:.06em;
-  padding:2px 7px;border-radius:100px;border:1px solid var(--b);color:var(--mu2);
-}
+.rms{font-family:var(--serif);font-size:14px;font-weight:600;text-transform:capitalize;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rmt{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;}
+.rtag{font-family:var(--mono);font-size:8px;letter-spacing:.05em;
+  padding:2px 7px;border-radius:100px;border:1px solid var(--b);color:var(--mu2);}
 .rtag.hi{border-color:rgba(248,113,113,.3);color:var(--r);}
 .rtag.med{border-color:rgba(56,189,248,.3);color:var(--c);}
 .rtag.upg{border-color:rgba(251,146,60,.3);color:var(--o);}
@@ -342,455 +297,467 @@ input[type=file]{display:none;}
 .rtag.ph{border-color:rgba(129,140,248,.25);color:var(--p2);}
 .rmchev{color:var(--mu);font-size:10px;transition:transform .25s;flex-shrink:0;}
 .rmc.open .rmchev{transform:rotate(180deg);}
-.rmb{display:none;padding:0 16px 14px;border-top:1px solid var(--b);}
+.rmb{display:none;padding:0 14px 14px;border-top:1px solid var(--b);}
 .rmc.open .rmb{display:block;}
+.prereq{background:rgba(251,146,60,.06);border:1px solid rgba(251,146,60,.18);
+  border-radius:8px;padding:8px 10px;margin:8px 0;font-size:10px;color:var(--o);}
 
-/* course cards */
-.cc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:10px 0;}
-.cc{
-  background:var(--bg3);border:1px solid var(--b);border-radius:9px;
-  padding:10px 12px;position:relative;transition:border-color .2s;
-}
-.cc:hover{border-color:rgba(56,189,248,.25);}
-.cc-ground{
-  position:absolute;top:6px;right:8px;
-  font-family:var(--mono);font-size:7px;letter-spacing:.07em;
-  color:#3dd6c8;background:rgba(61,214,200,.08);
-  padding:1px 6px;border-radius:100px;border:1px solid rgba(61,214,200,.2);
-}
-.cc-title{font-size:11px;font-weight:600;color:var(--tx);margin-bottom:3px;padding-right:52px;line-height:1.4;}
-.cc-prov{font-size:9px;color:var(--mu);margin-bottom:6px;}
-.cc-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;}
+.cc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:7px;margin:9px 0;}
+.cc{background:var(--bg3);border:1px solid var(--b);border-radius:9px;padding:10px 12px;position:relative;}
+.cc-ground{position:absolute;top:6px;right:8px;font-family:var(--mono);font-size:7px;
+  color:#3dd6c8;background:rgba(61,214,200,.08);padding:1px 6px;border-radius:100px;border:1px solid rgba(61,214,200,.2);}
+.cc-title{font-size:11px;font-weight:600;margin-bottom:2px;padding-right:48px;line-height:1.4;}
+.cc-prov{font-size:9px;color:var(--mu);margin-bottom:5px;}
+.cc-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
 .cc-tag{font-family:var(--mono);font-size:8px;padding:1px 6px;border-radius:100px;border:1px solid var(--b);color:var(--mu);}
 .cc-tag.free{border-color:rgba(74,222,128,.25);color:var(--g);}
-.cc-link{font-family:var(--mono);font-size:9px;color:var(--c);text-decoration:none;display:inline-flex;align-items:center;gap:3px;}
-.cc-link:hover{text-decoration:underline;}
+.cc-link{font-family:var(--mono);font-size:9px;color:var(--c);text-decoration:none;}
 
-/* steps */
 .steps{display:flex;flex-direction:column;}
-.st{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--b);}
+.st{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--b);}
 .st:last-child{border-bottom:none;}
-.stl{display:flex;flex-direction:column;align-items:center;width:24px;flex-shrink:0;}
-.stn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+.stl{display:flex;flex-direction:column;align-items:center;width:22px;flex-shrink:0;}
+.stn{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-family:var(--mono);font-size:8px;background:var(--bg);border:1px solid var(--b);color:var(--c);}
 .stln{flex:1;width:1px;background:var(--b);margin:3px 0;}
-.sta{font-weight:600;font-size:11px;margin-bottom:3px;}
+.sta{font-weight:600;font-size:11px;margin-bottom:2px;}
 .std{font-size:10px;color:var(--mu);line-height:1.6;}
-.sth{margin-top:5px;font-family:var(--mono);font-size:8px;color:var(--c);opacity:.6;display:inline-flex;align-items:center;gap:3px;}
+.sth{margin-top:4px;font-family:var(--mono);font-size:8px;color:var(--c);opacity:.6;}
 
-/* complete btn */
-.cbtn{
-  display:inline-flex;align-items:center;gap:5px;
-  margin-top:10px;padding:5px 12px;border-radius:100px;
-  border:1px solid var(--b);background:transparent;
-  color:var(--mu2);font-size:10px;cursor:pointer;transition:all .2s;
-}
+.cbtn{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:8px 14px;
+  border-radius:100px;border:1px solid var(--b);background:transparent;
+  color:var(--mu2);font-size:11px;cursor:pointer;transition:all .2s;min-height:36px;}
 .cbtn:hover{border-color:rgba(74,222,128,.35);color:var(--g);}
 .cbtn.done{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3);color:var(--g);}
 
-/* progress bar */
-.prog-wrap{background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;margin-top:6px;}
-.prog-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--c),var(--g));transition:width 1s ease;}
-
-/* prereq warn */
-.prereq{
-  background:rgba(251,146,60,.06);border:1px solid rgba(251,146,60,.18);
-  border-radius:8px;padding:8px 12px;margin:8px 0;font-size:10px;color:var(--o);
-}
-
 /* reasoning */
-.rea-list{display:flex;flex-direction:column;gap:8px;}
-.rea-item{
-  background:var(--sur);border:1px solid var(--b);border-radius:10px;
-  padding:12px 14px;display:flex;gap:10px;align-items:flex-start;
-}
-.ri-ico{
-  width:26px;height:26px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
-}
+.rea-list{display:flex;flex-direction:column;gap:7px;}
+.rea-item{background:var(--sur);border:1px solid var(--b);border-radius:10px;
+  padding:11px 13px;display:flex;gap:9px;align-items:flex-start;}
+.ri-ico{width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
 .ri-p{background:rgba(61,214,200,.12);color:#3dd6c8;}
 .ri-m{background:rgba(248,113,113,.12);color:var(--r);}
 .ri-u{background:rgba(251,146,60,.12);color:var(--o);}
-.rn{font-family:var(--serif);font-size:13px;font-weight:600;text-transform:capitalize;margin-bottom:3px;}
-.rbadge{font-family:var(--mono);font-size:8px;letter-spacing:.09em;padding:1px 7px;border-radius:100px;margin-left:6px;vertical-align:middle;}
+.rn{font-family:var(--serif);font-size:13px;font-weight:600;text-transform:capitalize;margin-bottom:2px;}
+.rbadge{font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:1px 6px;border-radius:100px;margin-left:5px;vertical-align:middle;}
 .rb-p{background:rgba(61,214,200,.1);color:#3dd6c8;}
 .rb-m{background:rgba(248,113,113,.1);color:var(--r);}
 .rb-u{background:rgba(251,146,60,.1);color:var(--o);}
 .rtxt{font-size:10px;color:var(--mu);line-height:1.6;}
 
 /* dashboard */
-.dash-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
-.dk{background:var(--sur);border:1px solid var(--b);border-radius:12px;padding:14px;text-align:center;position:relative;overflow:hidden;}
-.dk::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 110%,rgba(56,189,248,.05),transparent 65%);pointer-events:none;}
+.dash-kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+.dk{background:var(--sur);border:1px solid var(--b);border-radius:12px;padding:14px;text-align:center;}
 .dk-num{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1;}
 .dk-num.c{color:var(--c2);}.dk-num.g{color:var(--g);}.dk-num.p{color:var(--p2);}.dk-num.o{color:var(--o);}
 .dk-lbl{font-size:9px;color:var(--mu);margin-top:3px;letter-spacing:.04em;}
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.chart-card{background:var(--sur);border:1px solid var(--b);border-radius:12px;padding:14px;}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.chart-card{background:var(--sur);border:1px solid var(--b);border-radius:12px;padding:12px;}
 .chart-title{font-family:var(--serif);font-size:13px;font-weight:600;margin-bottom:10px;}
-.chart-wrap{position:relative;height:180px;}
-.comp-bar{margin-bottom:10px;}
-.comp-lbl{display:flex;justify-content:space-between;margin-bottom:4px;font-size:10px;}
-.comp-name{font-weight:500;}
+.chart-wrap{position:relative;height:170px;}
+.comp-bar{margin-bottom:9px;}
+.comp-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-size:10px;}
 .comp-pct{font-family:var(--mono);color:var(--c);}
-.comp-track{background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;}
+.comp-track{background:var(--bg3);border-radius:100px;height:5px;overflow:hidden;}
 .comp-fill{height:100%;border-radius:100px;transition:width 1.2s ease;}
 .time-row{display:flex;justify-content:space-between;align-items:center;
-  padding:7px 0;border-bottom:1px solid var(--b);font-size:11px;}
+  padding:6px 0;border-bottom:1px solid var(--b);font-size:11px;}
 .time-row:last-child{border-bottom:none;}
 .time-val{font-family:var(--mono);font-weight:500;color:#3dd6c8;}
 
-/* domain grid */
+/* domains */
 .dom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.dom-card{
-  background:var(--sur);border:1px solid var(--b);
-  border-radius:10px;padding:12px;cursor:default;transition:all .2s;
-}
+.dom-card{background:var(--sur);border:1px solid var(--b);border-radius:10px;padding:12px;transition:all .2s;}
 .dom-card:hover{border-color:var(--b2);}
-.dom-icon{font-size:18px;margin-bottom:6px;}
+.dom-icon{font-size:18px;margin-bottom:5px;}
 .dom-name{font-size:12px;font-weight:600;margin-bottom:2px;}
-.dom-desc{font-size:9px;color:var(--mu);line-height:1.5;margin-bottom:8px;}
+.dom-desc{font-size:9px;color:var(--mu);line-height:1.5;margin-bottom:7px;}
 .dom-skills{display:flex;flex-wrap:wrap;gap:3px;}
 .dom-skill{font-family:var(--mono);font-size:8px;padding:1px 6px;border-radius:100px;border:1px solid var(--b);color:var(--mu2);}
 .dom-skill.req{border-color:rgba(56,189,248,.25);color:var(--c);}
 
 /* how ai */
-.how-ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.ha-card{background:var(--sur);border:1px solid var(--b);border-radius:10px;padding:14px;}
-.ha-title{font-size:12px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-.ha-desc{font-size:10px;color:var(--mu);line-height:1.65;}
-.ha-code{
-  margin-top:8px;font-family:var(--mono);font-size:9px;
-  background:var(--bg3);border:1px solid var(--b);
-  border-radius:6px;padding:8px;color:var(--mu2);
-  line-height:1.8;white-space:pre-wrap;
-}
-.kw{color:var(--p2);}.fn{color:var(--c);}.st2{color:var(--g);}.cm{color:var(--g2);font-style:italic;}
-.pipe-row{display:flex;align-items:center;gap:0;margin:10px 0;overflow-x:auto;}
-.pnode{
-  background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);
-  border-radius:5px;padding:4px 8px;font-family:var(--mono);font-size:8px;
-  color:var(--c);white-space:nowrap;flex:1;text-align:center;letter-spacing:.05em;min-width:48px;
-}
+.how-ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.ha-card{background:var(--sur);border:1px solid var(--b);border-radius:10px;padding:12px;}
+.ha-title{font-size:11px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.ha-desc{font-size:10px;color:var(--mu);line-height:1.6;}
+.ha-code{margin-top:7px;font-family:var(--mono);font-size:9px;background:var(--bg3);
+  border:1px solid var(--b);border-radius:6px;padding:7px;color:var(--mu2);line-height:1.8;white-space:pre-wrap;}
+.kw{color:var(--p2);}.fn{color:var(--c);}.st2{color:var(--g);}.cm{color:var(--mu2);font-style:italic;}
+.pipe-row{display:flex;align-items:center;gap:0;margin:10px 0;overflow-x:auto;padding-bottom:4px;}
+.pnode{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);
+  border-radius:5px;padding:4px 7px;font-family:var(--mono);font-size:8px;
+  color:var(--c);white-space:nowrap;text-align:center;letter-spacing:.04em;flex:1;min-width:40px;}
 .parr{color:var(--mu);font-size:9px;padding:0 2px;flex-shrink:0;}
 
 /* toast */
-.toast{
-  position:fixed;bottom:20px;right:20px;z-index:999;
+.toast{position:fixed;bottom:16px;right:16px;left:16px;z-index:999;
   background:var(--sur2);border:1px solid rgba(56,189,248,.3);
-  border-radius:10px;padding:10px 16px;font-size:12px;font-weight:500;
+  border-radius:10px;padding:10px 14px;font-size:12px;font-weight:500;
   box-shadow:0 6px 24px rgba(0,0,0,.4);
-  opacity:0;transform:translateY(6px);transition:all .3s;pointer-events:none;
-}
+  opacity:0;transform:translateY(6px);transition:all .3s;pointer-events:none;text-align:center;}
 .toast.show{opacity:1;transform:translateY(0);}
 
-/* progress tracker bar */
-.progress-tracker{
-  background:var(--sur);border:1px solid var(--b);border-radius:10px;
-  padding:12px 14px;margin-bottom:12px;
+/* ══════════════════════════════════
+   RESPONSIVE — MOBILE
+══════════════════════════════════ */
+@media(max-width:768px){
+  /* show mobile switcher, hide desktop nav links */
+  .mobile-switcher{display:block;}
+  .nav-desktop{display:none;}
+  .status-pill{display:none;}
+
+  /* body becomes vertical stack */
+  .app-body{flex-direction:column;}
+
+  /* left panel: full width, not sticky, not fixed height */
+  .left{
+    width:100%;border-right:none;border-bottom:1px solid var(--b);
+    position:static;height:auto;
+    /* hidden by default on mobile, shown via switcher */
+    display:none;
+  }
+  .left.mobile-visible{display:flex;}
+
+  /* right panel: full width */
+  .right{
+    width:100%;
+    /* hidden by default until results, shown via switcher */
+  }
+  .right.mobile-hidden{display:none;}
+
+  /* impact banner — 3 cols on mobile */
+  .impact-banner{grid-template-columns:repeat(3,1fr);}
+  .impact-banner .ib-item:nth-child(4),
+  .impact-banner .ib-item:nth-child(5){display:none;}
+
+  /* stat grid — 2x2 */
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+
+  /* dash kpi — 2x2 already ok */
+
+  /* charts — stack vertically */
+  .charts-row{grid-template-columns:1fr;}
+
+  /* domain grid — 2 cols */
+  .dom-grid{grid-template-columns:repeat(2,1fr);}
+
+  /* how ai grid — 1 col */
+  .how-ai-grid{grid-template-columns:1fr;}
+
+  /* course cards — 1 col */
+  .cc-grid{grid-template-columns:1fr;}
+
+  /* results body padding */
+  .results-body{padding:12px 14px;}
+
+  /* tab bar bigger tap targets */
+  .tbtn{min-height:36px;padding:6px 10px;font-size:11px;}
+
+  /* nav cta smaller */
+  .nav-cta{padding:6px 12px;font-size:11px;}
+
+  /* toast full width already */
+
+  /* domain strip bigger tap targets */
+  .dom-btn{min-height:36px;padding:6px 12px;}
 }
-.pt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;}
-.pt-title{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--c);text-transform:uppercase;}
-.pt-count{font-family:var(--serif);font-size:16px;font-weight:600;}
-.pt-pct{font-family:var(--mono);font-size:13px;color:var(--c);}
-.pt-hours{display:flex;gap:14px;margin-top:6px;font-size:10px;color:var(--mu);}
-.pt-hours strong{color:var(--tx);}
+
+@media(max-width:400px){
+  .impact-banner{grid-template-columns:repeat(2,1fr);}
+  .impact-banner .ib-item:nth-child(3),
+  .impact-banner .ib-item:nth-child(4),
+  .impact-banner .ib-item:nth-child(5){display:none;}
+  .dom-grid{grid-template-columns:1fr 1fr;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .how-ai-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
 
 <canvas id="cv"></canvas>
 
-<div class="app">
+<!-- NAV -->
+<nav>
+  <div class="logo"><span class="logo-hex">⬡</span><span class="logo-text">SkillBridge</span></div>
+  <div class="nav-desktop">
+    <a>Platform</a><a>Solutions</a><a>Docs</a><a>Pricing</a>
+  </div>
+  <div class="nav-links">
+    <div class="status-pill"><span class="status-dot"></span>API Online</div>
+    <button class="nav-cta">Get Started</button>
+  </div>
+</nav>
 
-  <!-- NAV -->
-  <nav>
-    <div class="logo"><span class="logo-hex">⬡</span><span class="logo-text">SkillBridge</span></div>
-    <div class="nav-mid">
-      <a>Platform</a><a>Solutions</a><a>Docs</a><a>Pricing</a>
+<!-- MOBILE VIEW SWITCHER -->
+<div class="mobile-switcher">
+  <div class="ms-inner">
+    <button class="ms-btn active" id="ms-upload" onclick="mobileTab('upload')">
+      📤 Upload
+    </button>
+    <button class="ms-btn" id="ms-results" onclick="mobileTab('results')">
+      📊 Results
+    </button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="app-body">
+
+  <!-- LEFT: UPLOAD -->
+  <div class="left mobile-visible" id="leftPanel">
+    <div class="panel-head">
+      <div class="panel-title">Analyze Skills</div>
+      <div class="panel-sub">Upload resume + job description to detect gaps</div>
     </div>
-    <div class="nav-right">
-      <div class="status-pill"><span class="status-dot"></span>API Online</div>
-      <button class="nav-cta">Get Started →</button>
-    </div>
-  </nav>
+    <div class="left-inner">
 
-  <div class="body">
-
-    <!-- ── LEFT: UPLOAD PANEL ── -->
-    <div class="left">
-      <div class="panel-head">
-        <div class="panel-title">Analyze Skills</div>
-        <div class="panel-sub">Upload resume + job description to detect gaps</div>
+      <div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--mu);text-transform:uppercase;margin-bottom:8px;">Target Domain</div>
+        <div class="domain-strip">
+          <button class="dom-btn active" onclick="setDomain(this)">💻 Tech</button>
+          <button class="dom-btn" onclick="setDomain(this)">📊 Finance</button>
+          <button class="dom-btn" onclick="setDomain(this)">🏭 Ops</button>
+          <button class="dom-btn" onclick="setDomain(this)">🏥 Health</button>
+          <button class="dom-btn" onclick="setDomain(this)">🎓 Edu</button>
+        </div>
       </div>
 
-      <div class="left-inner">
+      <label class="dz" id="rz" for="ri">
+        <span class="dz-icon">📄</span>
+        <div class="dz-title">Résumé</div>
+        <div class="dz-sub">PDF or .txt — tap to select or drag</div>
+        <div class="dz-fname" id="rn"></div>
+        <input type="file" id="ri" accept=".pdf,.txt,.text,.md"/>
+      </label>
 
-        <!-- Domain selector -->
-        <div>
-          <div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--mu);text-transform:uppercase;margin-bottom:8px;">Target Domain</div>
-          <div class="domain-strip">
-            <button class="dom-btn active" onclick="setDomain(this,'tech')">💻 Tech</button>
-            <button class="dom-btn" onclick="setDomain(this,'biz')">📊 Finance</button>
-            <button class="dom-btn" onclick="setDomain(this,'ops')">🏭 Ops</button>
-            <button class="dom-btn" onclick="setDomain(this,'health')">🏥 Health</button>
-            <button class="dom-btn" onclick="setDomain(this,'edu')">🎓 Education</button>
-          </div>
-        </div>
+      <label class="dz" id="jz" for="ji">
+        <span class="dz-icon">💼</span>
+        <div class="dz-title">Job Description</div>
+        <div class="dz-sub">PDF or .txt — tap to select or drag</div>
+        <div class="dz-fname" id="jn"></div>
+        <input type="file" id="ji" accept=".pdf,.txt,.text,.md"/>
+      </label>
 
-        <!-- Resume upload -->
-        <label class="dz" id="rz" for="ri">
-          <span class="dz-icon">📄</span>
-          <div class="dz-title">Résumé</div>
-          <div class="dz-sub">PDF or .txt — drag & drop or click</div>
-          <div class="dz-fname" id="rn"></div>
-          <input type="file" id="ri" accept=".pdf,.txt,.text,.md"/>
-        </label>
+      <div class="err-box" id="errBox"></div>
 
-        <!-- JD upload -->
-        <label class="dz" id="jz" for="ji">
-          <span class="dz-icon">💼</span>
-          <div class="dz-title">Job Description</div>
-          <div class="dz-sub">PDF or .txt — drag & drop or click</div>
-          <div class="dz-fname" id="jn"></div>
-          <input type="file" id="ji" accept=".pdf,.txt,.text,.md"/>
-        </label>
+      <button class="analyze-btn" id="abtn" disabled onclick="analyze()">
+        ⚡ Analyze Skill Gap
+      </button>
 
-        <!-- Error -->
-        <div class="err-box" id="errBox"></div>
+      <div class="left-stats" id="leftStats" style="display:none;">
+        <div class="ls-card"><div class="ls-num c" id="ls1">—</div><div class="ls-lbl">JD Skills</div></div>
+        <div class="ls-card"><div class="ls-num g" id="ls2">—</div><div class="ls-lbl">Resume Skills</div></div>
+        <div class="ls-card"><div class="ls-num r" id="ls3">—</div><div class="ls-lbl">Missing</div></div>
+        <div class="ls-card"><div class="ls-num p" id="ls4">—</div><div class="ls-lbl">Coverage</div></div>
+      </div>
 
-        <!-- Analyze button -->
-        <button class="analyze-btn" id="abtn" disabled onclick="analyze()">
-          ⚡ Analyze Skill Gap
-        </button>
+      <div class="how-card">
+        <div class="how-title">How It Works</div>
+        <div class="how-step"><div class="how-num">1</div><div class="how-text">6-stage NLP pipeline extracts skills — exact match, alias, fuzzy, TF-IDF, spaCy</div></div>
+        <div class="how-step"><div class="how-num">2</div><div class="how-text">Gap engine classifies each JD skill as PRESENT, MISSING, or LEVEL_UPGRADE</div></div>
+        <div class="how-step"><div class="how-num">3</div><div class="how-text">Roadmap built from locked catalog, ordered by prerequisites via Kahn's BFS</div></div>
+        <div class="how-step"><div class="how-num">4</div><div class="how-text">Dashboard shows hours saved, coverage %, and competency readiness</div></div>
+      </div>
 
-        <!-- Stats (filled after analysis) -->
-        <div class="left-stats" id="leftStats" style="display:none;">
-          <div class="ls-card"><div class="ls-num c" id="ls1">—</div><div class="ls-lbl">JD Skills</div></div>
-          <div class="ls-card"><div class="ls-num g" id="ls2">—</div><div class="ls-lbl">Resume Skills</div></div>
-          <div class="ls-card"><div class="ls-num r" id="ls3">—</div><div class="ls-lbl">Missing</div></div>
-          <div class="ls-card"><div class="ls-num p" id="ls4">—</div><div class="ls-lbl">Coverage</div></div>
-        </div>
+      <div style="background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.18);border-radius:10px;padding:10px 12px;">
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--g);text-transform:uppercase;margin-bottom:4px;">✓ Zero Hallucinations</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);line-height:1.6;">Every course recommendation sourced exclusively from locked <code style="color:var(--c);font-size:9px;">course_catalog.json</code></div>
+      </div>
 
-        <!-- How it works -->
-        <div class="how-card">
-          <div class="how-title">How It Works</div>
-          <div class="how-step"><div class="how-num">1</div><div class="how-text">NLP pipeline extracts skills from your documents using 6-stage matching (exact, alias, fuzzy, TF-IDF, spaCy vectors)</div></div>
-          <div class="how-step"><div class="how-num">2</div><div class="how-text">Gap engine classifies each JD skill as PRESENT, MISSING, or LEVEL_UPGRADE with confidence scores</div></div>
-          <div class="how-step"><div class="how-num">3</div><div class="how-text">Roadmap is generated from locked course catalog — topologically ordered by prerequisites (Kahn's BFS)</div></div>
-          <div class="how-step"><div class="how-num">4</div><div class="how-text">Impact dashboard shows hours saved, coverage %, and competency readiness score with live charts</div></div>
-        </div>
+    </div>
+  </div>
 
-        <!-- Grounding note -->
-        <div style="background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.18);border-radius:10px;padding:10px 12px;">
-          <div style="font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--g);text-transform:uppercase;margin-bottom:5px;">✓ Zero Hallucinations</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.6;">Every course recommendation is sourced exclusively from the locked <code style="color:var(--c);font-size:9px;">course_catalog.json</code> — no AI-generated course names.</div>
-        </div>
-
+  <!-- RIGHT: RESULTS -->
+  <div class="right" id="rightPanel">
+    <div class="results-topbar">
+      <div class="rtb-title">Analysis Results</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="processing-pill" id="procPill"><div class="proc-ring"></div>Processing…</div>
+        <div id="metaInfo" style="font-family:var(--mono);font-size:9px;color:var(--mu);display:none;"></div>
       </div>
     </div>
 
-    <!-- ── RIGHT: RESULTS PANEL ── -->
-    <div class="right">
+    <div class="tab-bar">
+      <button class="tbtn on" data-t="overview">Overview</button>
+      <button class="tbtn" data-t="skills">Skills</button>
+      <button class="tbtn" data-t="gap">Gap</button>
+      <button class="tbtn" data-t="roadmap">Roadmap</button>
+      <button class="tbtn" data-t="reasoning">Reasoning</button>
+      <button class="tbtn" data-t="dashboard">Dashboard</button>
+      <button class="tbtn" data-t="domains">Domains</button>
+      <button class="tbtn" data-t="howai">How AI Works</button>
+    </div>
 
-      <!-- top bar -->
-      <div class="results-topbar">
-        <div class="rtb-title">Analysis Results</div>
-        <div class="rtb-right">
-          <div class="processing-pill" id="procPill">
-            <div class="proc-ring"></div>Processing…
+    <div class="results-body">
+
+      <!-- EMPTY -->
+      <div class="tp on" id="tp-empty">
+        <div class="empty">
+          <div class="empty-icon">🎯</div>
+          <div class="empty-title">Ready to Analyze</div>
+          <div class="empty-sub">Upload your résumé and job description, then tap Analyze Skill Gap to see results here.</div>
+          <div class="empty-tags">
+            <span class="empty-tag" style="border-color:rgba(56,189,248,.2);color:var(--c);">NLP Extraction</span>
+            <span class="empty-tag" style="border-color:rgba(129,140,248,.2);color:var(--p2);">Gap Analysis</span>
+            <span class="empty-tag" style="border-color:rgba(74,222,128,.2);color:var(--g);">Grounded Roadmap</span>
           </div>
-          <div id="metaInfo" style="font-family:var(--mono);font-size:9px;color:var(--mu);display:none;"></div>
         </div>
       </div>
 
-      <!-- tab bar -->
-      <div class="tab-bar">
-        <button class="tbtn on" data-t="overview">Overview</button>
-        <button class="tbtn" data-t="skills">Skills Found</button>
-        <button class="tbtn" data-t="gap">Skill Gap</button>
-        <button class="tbtn" data-t="roadmap">Roadmap</button>
-        <button class="tbtn" data-t="reasoning">Reasoning Trace</button>
-        <button class="tbtn" data-t="dashboard">Impact Dashboard</button>
-        <button class="tbtn" data-t="domains">Cross-Domain</button>
-        <button class="tbtn" data-t="howai">How AI Works</button>
+      <!-- OVERVIEW -->
+      <div class="tp" id="tp-overview">
+        <div class="impact-banner" id="impactBanner"></div>
+        <div class="sum-card">
+          <div class="sum-top">
+            <div>
+              <div class="sum-label">Analysis Complete</div>
+              <div class="sum-val" id="rlVal"></div>
+              <div id="metaLine" style="font-size:10px;color:var(--mu);margin-top:5px;font-family:var(--mono);"></div>
+            </div>
+            <div class="ring">
+              <svg width="84" height="84" viewBox="0 0 100 100">
+                <circle class="rb" cx="50" cy="50" r="45"/>
+                <circle class="rf" id="rf" cx="50" cy="50" r="45"/>
+              </svg>
+              <div class="ri"><span class="rp" id="rp">0%</span><span class="rs">MATCH</span></div>
+            </div>
+          </div>
+          <div class="stat-grid" id="statGrid"></div>
+        </div>
+        <div class="sh"><div class="sh-txt">Resume Skills</div><div class="sh-line"></div></div>
+        <div class="chips" id="ov-resume" style="margin-bottom:12px;"></div>
+        <div class="sh"><div class="sh-txt">JD Skills</div><div class="sh-line"></div></div>
+        <div class="chips" id="ov-jd" style="margin-bottom:12px;"></div>
+        <div class="sh"><div class="sh-txt">Skill Gap</div><div class="sh-line"></div></div>
+        <div class="chips" id="ov-gap"></div>
       </div>
 
-      <!-- results body -->
-      <div class="results-body">
+      <!-- SKILLS -->
+      <div class="tp" id="tp-skills">
+        <div class="sh"><div class="sh-txt">Résumé Skills</div><div class="sh-line"></div></div>
+        <div class="chips" id="resumeChips" style="margin-bottom:14px;"></div>
+        <div class="sh"><div class="sh-txt">Job Description Skills</div><div class="sh-line"></div></div>
+        <div class="chips" id="jdChips"></div>
+      </div>
 
-        <!-- EMPTY STATE -->
-        <div class="tp on" id="tp-empty">
-          <div class="empty">
-            <div class="empty-icon">🎯</div>
-            <div class="empty-title">Ready to Analyze</div>
-            <div class="empty-sub">Upload your résumé and job description on the left, then click Analyze Skill Gap to see your personalized results here.</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-              <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:100px;border:1px solid rgba(56,189,248,.2);color:var(--c);">NLP Extraction</span>
-              <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:100px;border:1px solid rgba(129,140,248,.2);color:var(--p2);">Gap Analysis</span>
-              <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:100px;border:1px solid rgba(74,222,128,.2);color:var(--g);">Catalog-Grounded Roadmap</span>
-              <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;border-radius:100px;border:1px solid rgba(232,184,75,.2);color:var(--gold);">Impact Metrics</span>
+      <!-- GAP -->
+      <div class="tp" id="tp-gap">
+        <div class="sh"><div class="sh-txt">Missing &amp; Level-Upgrade Skills</div><div class="sh-line"></div></div>
+        <div class="chips" id="gapChips"></div>
+      </div>
+
+      <!-- ROADMAP -->
+      <div class="tp" id="tp-roadmap">
+        <div class="progress-tracker" id="progTracker">
+          <div class="pt-top">
+            <div>
+              <div class="pt-title">Learning Progress</div>
+              <div class="pt-count"><span id="doneC">0</span><span style="color:var(--mu);font-size:12px;"> / <span id="totC">0</span> courses</span></div>
             </div>
+            <div class="pt-pct" id="progPct">0%</div>
+          </div>
+          <div class="prog-wrap"><div class="prog-fill" id="progBar" style="width:0%"></div></div>
+          <div class="pt-hours">
+            <span>Total: <strong id="totHrs">0h</strong></span>
+            <span>Done: <strong id="doneHrs" style="color:#3dd6c8">0h</strong></span>
+            <span>Left: <strong id="remHrs" style="color:var(--c)">0h</strong></span>
           </div>
         </div>
+        <div class="sh"><div class="sh-txt">Learning Path — Catalog Grounded</div><div class="sh-line"></div></div>
+        <div class="rm-list" id="rmList"></div>
+      </div>
 
-        <!-- OVERVIEW -->
-        <div class="tp" id="tp-overview">
-          <div class="impact-banner" id="impactBanner"></div>
-          <div class="sum-card">
-            <div class="sum-top">
-              <div>
-                <div class="sum-label">Analysis Complete</div>
-                <div class="sum-val" id="rlVal"></div>
-                <div id="metaLine" style="font-size:10px;color:var(--mu);margin-top:6px;font-family:var(--mono);"></div>
-              </div>
-              <div class="ring">
-                <svg width="90" height="90" viewBox="0 0 100 100">
-                  <circle class="rb" cx="50" cy="50" r="45"/>
-                  <circle class="rf" id="rf" cx="50" cy="50" r="45"/>
-                </svg>
-                <div class="ri"><span class="rp" id="rp">0%</span><span class="rs">MATCH</span></div>
-              </div>
-            </div>
-            <div class="stat-grid" id="statGrid"></div>
+      <!-- REASONING -->
+      <div class="tp" id="tp-reasoning">
+        <div class="sh"><div class="sh-txt">Full Reasoning Trace</div><div class="sh-line"></div></div>
+        <div class="rea-list" id="reaList"></div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="tp" id="tp-dashboard">
+        <div class="dash-kpi" id="kpiGrid"></div>
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-title">Skill Coverage</div>
+            <div class="chart-wrap"><canvas id="radarChart"></canvas></div>
           </div>
-          <div class="sh"><div class="sh-txt">Resume Skills</div><div class="sh-line"></div></div>
-          <div class="chips" id="ov-resume" style="margin-bottom:14px;"></div>
-          <div class="sh"><div class="sh-txt">JD Skills</div><div class="sh-line"></div></div>
-          <div class="chips" id="ov-jd" style="margin-bottom:14px;"></div>
-          <div class="sh"><div class="sh-txt">Skill Gap</div><div class="sh-line"></div></div>
-          <div class="chips" id="ov-gap"></div>
-        </div>
-
-        <!-- SKILLS FOUND -->
-        <div class="tp" id="tp-skills">
-          <div class="sh"><div class="sh-txt">Résumé Skills</div><div class="sh-line"></div></div>
-          <div class="chips" id="resumeChips" style="margin-bottom:16px;"></div>
-          <div class="sh"><div class="sh-txt">Job Description Skills</div><div class="sh-line"></div></div>
-          <div class="chips" id="jdChips"></div>
-        </div>
-
-        <!-- SKILL GAP -->
-        <div class="tp" id="tp-gap">
-          <div class="sh"><div class="sh-txt">Missing & Level-Upgrade Skills</div><div class="sh-line"></div></div>
-          <div class="chips" id="gapChips"></div>
-        </div>
-
-        <!-- ROADMAP -->
-        <div class="tp" id="tp-roadmap">
-          <div class="progress-tracker" id="progTracker">
-            <div class="pt-top">
-              <div><div class="pt-title">Learning Progress</div>
-                <div class="pt-count"><span id="doneC">0</span> <span style="color:var(--mu);font-size:12px;">/ <span id="totC">0</span> courses</span></div>
-              </div>
-              <div class="pt-pct" id="progPct">0%</div>
-            </div>
-            <div class="prog-wrap"><div class="prog-fill" id="progBar" style="width:0%"></div></div>
-            <div class="pt-hours">
-              <span>Total: <strong id="totHrs">0h</strong></span>
-              <span>Done: <strong id="doneHrs" style="color:#3dd6c8">0h</strong></span>
-              <span>Left: <strong id="remHrs" style="color:var(--c)">0h</strong></span>
-            </div>
-          </div>
-          <div class="sh"><div class="sh-txt">Learning Path — Catalog Grounded</div><div class="sh-line"></div></div>
-          <div class="rm-list" id="rmList"></div>
-        </div>
-
-        <!-- REASONING TRACE -->
-        <div class="tp" id="tp-reasoning">
-          <div class="sh"><div class="sh-txt">Full Reasoning Trace</div><div class="sh-line"></div></div>
-          <div class="rea-list" id="reaList"></div>
-        </div>
-
-        <!-- IMPACT DASHBOARD -->
-        <div class="tp" id="tp-dashboard">
-          <div class="dash-kpi" id="kpiGrid"></div>
-          <div class="charts-row">
-            <div class="chart-card">
-              <div class="chart-title">Skill Coverage by Category</div>
-              <div class="chart-wrap"><canvas id="radarChart"></canvas></div>
-            </div>
-            <div class="chart-card">
-              <div class="chart-title">Competency Readiness</div>
-              <div class="chart-wrap"><canvas id="doughnutChart"></canvas></div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="chart-card">
-              <div class="chart-title">Competency Breakdown</div>
-              <div id="compBars"></div>
-            </div>
-            <div class="chart-card">
-              <div class="chart-title">Training Time Analysis</div>
-              <div id="timeBrkdn"></div>
-            </div>
+          <div class="chart-card">
+            <div class="chart-title">Readiness</div>
+            <div class="chart-wrap"><canvas id="doughnutChart"></canvas></div>
           </div>
         </div>
-
-        <!-- CROSS-DOMAIN -->
-        <div class="tp" id="tp-domains">
-          <div class="sh"><div class="sh-txt">Supported Domains</div><div class="sh-line"></div></div>
-          <div class="dom-grid" id="domGrid"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="chart-card"><div class="chart-title">Competency</div><div id="compBars"></div></div>
+          <div class="chart-card"><div class="chart-title">Time Analysis</div><div id="timeBrkdn"></div></div>
         </div>
+      </div>
 
-        <!-- HOW AI WORKS -->
-        <div class="tp" id="tp-howai">
-          <div class="sh"><div class="sh-txt">NLP Extraction Pipeline</div><div class="sh-line"></div></div>
-          <div class="pipe-row">
-            <div class="pnode">Parse<br>PDF/TXT</div><div class="parr">→</div>
-            <div class="pnode">Exact<br>Regex</div><div class="parr">→</div>
-            <div class="pnode">Alias<br>Resolve</div><div class="parr">→</div>
-            <div class="pnode">N-gram<br>Pool</div><div class="parr">→</div>
-            <div class="pnode">Fuzzy<br>≥0.82</div><div class="parr">→</div>
-            <div class="pnode">TF-IDF<br>Boost</div><div class="parr">→</div>
-            <div class="pnode">spaCy<br>Vectors</div>
+      <!-- DOMAINS -->
+      <div class="tp" id="tp-domains">
+        <div class="sh"><div class="sh-txt">Supported Domains</div><div class="sh-line"></div></div>
+        <div class="dom-grid" id="domGrid"></div>
+      </div>
+
+      <!-- HOW AI -->
+      <div class="tp" id="tp-howai">
+        <div class="sh"><div class="sh-txt">NLP Extraction Pipeline</div><div class="sh-line"></div></div>
+        <div class="pipe-row">
+          <div class="pnode">Parse</div><div class="parr">→</div>
+          <div class="pnode">Exact</div><div class="parr">→</div>
+          <div class="pnode">Alias</div><div class="parr">→</div>
+          <div class="pnode">N-gram</div><div class="parr">→</div>
+          <div class="pnode">Fuzzy</div><div class="parr">→</div>
+          <div class="pnode">TF-IDF</div><div class="parr">→</div>
+          <div class="pnode">spaCy</div>
+        </div>
+        <div class="how-ai-grid">
+          <div class="ha-card">
+            <div class="ha-title">🔍 No Redundant Training</div>
+            <div class="ha-desc">If candidate already has a skill at the required level, no course is recommended.</div>
+            <div class="ha-code"><span class="kw">if</span> resume_level >= jd_level:
+    <span class="fn">skip</span>(skill)</div>
           </div>
-          <div class="how-ai-grid">
-            <div class="ha-card">
-              <div class="ha-title">🔍 Rule 1 — No Redundant Training</div>
-              <div class="ha-desc">If candidate already has a skill at the required level, no course is recommended. Exact set difference between resume skills and JD requirements.</div>
-              <div class="ha-code"><span class="kw">if</span> resume_level &gt;= jd_level:
-    <span class="fn">skip</span>(skill) <span class="cm"># No course needed</span></div>
-            </div>
-            <div class="ha-card">
-              <div class="ha-title">⬆ Rule 2 — Level Progression</div>
-              <div class="ha-desc">Recommendations always start at the candidate's current level +1. Levels are never skipped: Beginner → Intermediate → Advanced.</div>
-              <div class="ha-code">start = <span class="fn">next_level</span>(current)
-           <span class="kw">if</span> known <span class="kw">else</span> <span class="st2">'beginner'</span></div>
-            </div>
-            <div class="ha-card">
-              <div class="ha-title">🗺 Rule 3 — Topological Sort</div>
-              <div class="ha-desc">Kahn's BFS algorithm resolves prerequisites. Docker always before Kubernetes, Python before Django — dependency-safe ordering guaranteed.</div>
-              <div class="ha-code">ordered = <span class="fn">kahn_bfs</span>(gap, DAG)
-<span class="cm"># O(V+E) · zero violations</span></div>
-            </div>
-            <div class="ha-card">
-              <div class="ha-title">🔒 Rule 4 — Catalog Grounding</div>
-              <div class="ha-desc">Every course sourced exclusively from course_catalog.json. Unknown skills use the 'default' real fallback course — never a fabricated name.</div>
-              <div class="ha-code">courses = CATALOG.<span class="fn">filter</span>(
+          <div class="ha-card">
+            <div class="ha-title">⬆ Level Progression</div>
+            <div class="ha-desc">Always start at next level up. Beginner → Intermediate → Advanced, never skip.</div>
+            <div class="ha-code">start = <span class="fn">next_level</span>(current)
+       <span class="kw">if</span> known <span class="kw">else</span> <span class="st2">'beginner'</span></div>
+          </div>
+          <div class="ha-card">
+            <div class="ha-title">🗺 Topological Sort</div>
+            <div class="ha-desc">Kahn's BFS ensures Docker before Kubernetes, Python before FastAPI.</div>
+            <div class="ha-code">ordered = <span class="fn">kahn_bfs</span>(gap, DAG)
+<span class="cm"># O(V+E) · 0 violations</span></div>
+          </div>
+          <div class="ha-card">
+            <div class="ha-title">🔒 Catalog Grounding</div>
+            <div class="ha-desc">Every course from course_catalog.json only. No AI-generated course names ever.</div>
+            <div class="ha-code">courses = CATALOG.<span class="fn">filter</span>(
   skill <span class="kw">in</span> c.skills
-  <span class="kw">and</span> grounded == <span class="st2">True</span>)</div>
-            </div>
+  <span class="kw">and</span> grounded==<span class="st2">True</span>)</div>
           </div>
         </div>
+      </div>
 
-      </div><!-- /results-body -->
-    </div><!-- /right -->
-  </div><!-- /body -->
-</div><!-- /app -->
+    </div><!-- /results-body -->
+  </div><!-- /right -->
+</div><!-- /app-body -->
 
 <div class="toast" id="toast"></div>
 
 <script>
-/* ── PARTICLES ── */
+/* PARTICLES */
 (function(){
   const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
   let W,H,dots;
   function sz(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
   function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+.25,
     sp:Math.random()*.003+.0006,ph:Math.random()*Math.PI*2,
-    ba:Math.random()*.35+.07,dx:(Math.random()-.5)*.08,dy:(Math.random()-.5)*.08};}
-  function init(){sz();dots=Array.from({length:Math.round(W*H/14000)},mk);}
+    ba:Math.random()*.32+.07,dx:(Math.random()-.5)*.08,dy:(Math.random()-.5)*.08};}
+  function init(){sz();dots=Array.from({length:Math.round(W*H/16000)},mk);}
   let t=0;
   function draw(){
     ctx.clearRect(0,0,W,H);t+=.01;
@@ -798,7 +765,7 @@ input[type=file]{display:none;}
       const a=Math.max(0,Math.min(1,d.ba+Math.sin(t*d.sp*280+d.ph)*.22));
       const h=d.r*(3+Math.sin(t*d.sp*180+d.ph)*1.2);
       const g=ctx.createRadialGradient(d.x,d.y,0,d.x,d.y,h);
-      g.addColorStop(0,`rgba(56,189,248,${(a*.42).toFixed(3)})`);
+      g.addColorStop(0,`rgba(56,189,248,${(a*.4).toFixed(3)})`);
       g.addColorStop(1,'rgba(56,189,248,0)');
       ctx.beginPath();ctx.arc(d.x,d.y,h,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
       ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
@@ -813,21 +780,37 @@ input[type=file]{display:none;}
   init();draw();
 })();
 
-/* ── CONFIG & STATE ── */
-const API='https://onboarding-engine.onrender.com';
+/* CONFIG */
+const API='http://127.0.0.1:8000';
 let rFile=null,jFile=null,_data=null,_done=new Set(),_radar=null,_dnut=null;
+const isMobile=()=>window.innerWidth<=768;
 
-/* ── DOMAIN DATA ── */
+/* MOBILE SWITCHER */
+function mobileTab(tab){
+  const left=document.getElementById('leftPanel');
+  const right=document.getElementById('rightPanel');
+  document.getElementById('ms-upload').classList.toggle('active',tab==='upload');
+  document.getElementById('ms-results').classList.toggle('active',tab==='results');
+  if(tab==='upload'){
+    left.classList.add('mobile-visible');
+    right.classList.add('mobile-hidden');
+  } else {
+    left.classList.remove('mobile-visible');
+    right.classList.remove('mobile-hidden');
+  }
+}
+
+/* DOMAINS */
 const DOMAINS=[
-  {icon:'💻',name:'Software Developer',desc:'Full-stack, backend, DevOps, ML engineering',req:['python','javascript','react','sql','git','docker','aws','agile'],nice:['kubernetes','machine learning','cybersecurity']},
-  {icon:'📊',name:'Accountant / Finance',desc:'Financial reporting, auditing, FP&A, tax',req:['excel','accounting','data analysis','quickbooks'],nice:['power bi','tableau','project management']},
-  {icon:'🏭',name:'Factory / Operational',desc:'Production, warehouse, quality, logistics',req:['safety compliance','quality control','inventory management','first aid'],nice:['lean manufacturing','six sigma','supply chain']},
-  {icon:'🏥',name:'Healthcare Worker',desc:'Nursing, clinical, patient care, EHR',req:['patient care','first aid','hipaa','ehr'],nice:['medication administration','triage','vital signs']},
-  {icon:'🎓',name:'Educator',desc:'Curriculum, classroom management, instructional design',req:['curriculum development','classroom management','communication'],nice:['e-learning','differentiated instruction','assessment design']},
-  {icon:'📈',name:'Data Analyst',desc:'Analytics, BI, statistical analysis, visualization',req:['sql','python','data analysis','excel'],nice:['machine learning','tableau','power bi']},
+  {icon:'💻',name:'Software Dev',desc:'Full-stack, backend, DevOps',req:['python','javascript','react','sql','git','docker','aws'],nice:['kubernetes','machine learning']},
+  {icon:'📊',name:'Accountant',desc:'Finance, audit, FP&A, tax',req:['excel','accounting','data analysis','quickbooks'],nice:['power bi','tableau']},
+  {icon:'🏭',name:'Factory Ops',desc:'Production, warehouse, QC',req:['safety compliance','quality control','inventory management'],nice:['lean manufacturing','six sigma']},
+  {icon:'🏥',name:'Healthcare',desc:'Nursing, clinical, EHR',req:['patient care','first aid','hipaa','ehr'],nice:['triage','vital signs']},
+  {icon:'🎓',name:'Educator',desc:'Curriculum, classroom mgmt',req:['curriculum development','classroom management'],nice:['e-learning','assessment design']},
+  {icon:'📈',name:'Data Analyst',desc:'Analytics, BI, visualization',req:['sql','python','data analysis','excel'],nice:['machine learning','tableau']},
 ];
 
-/* ── FILE WIRING ── */
+/* FILE WIRING */
 function wire(zId,iId,nId,key){
   const z=document.getElementById(zId),inp=document.getElementById(iId),nm=document.getElementById(nId);
   inp.addEventListener('change',()=>{if(inp.files[0])setF(inp.files[0],z,nm,key);});
@@ -842,39 +825,43 @@ function setF(f,z,nm,key){
 }
 wire('rz','ri','rn','r');wire('jz','ji','jn','j');
 
-/* ── DOMAIN ── */
 function setDomain(btn){
   document.querySelectorAll('.dom-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-/* ── ANALYZE ── */
+/* ANALYZE */
 async function analyze(){
   showProc();hideErr();_done=new Set();
-  // Switch to overview tab, hide empty
+  // switch to results on mobile
+  if(isMobile()) mobileTab('results');
+  // switch to overview tab
   document.getElementById('tp-empty').classList.remove('on');
   document.querySelectorAll('.tbtn').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.tp').forEach(t=>t.classList.remove('on'));
   document.querySelector('[data-t="overview"]').classList.add('on');
   document.getElementById('tp-overview').classList.add('on');
-
   try{
-    const fd=new FormData();fd.append('resume_file',rFile);fd.append('jd_file',jFile);
+    const fd=new FormData();
+    fd.append('resume_file',rFile);
+    fd.append('jd_file',jFile);
     const r=await fetch(`${API}/analyze`,{method:'POST',body:fd});
     if(!r.ok){const e=await r.json();throw new Error(e.detail||`Server error ${r.status}`);}
     _data=await r.json();
     hideProc();render(_data);
-    // show left stats
     const s=_data.summary;
     document.getElementById('ls1').textContent=s.total_jd_skills;
     document.getElementById('ls2').textContent=s.total_resume_skills;
     document.getElementById('ls3').textContent=s.missing_skills??s.total_gaps??0;
     document.getElementById('ls4').textContent=(s.coverage_percent||0)+'%';
     document.getElementById('leftStats').style.display='grid';
-  }catch(e){hideProc();showErr(e.message);}
+  }catch(e){
+    hideProc();showErr(e.message);
+    if(isMobile()) mobileTab('upload');
+  }
 }
 
-/* ── RENDER ALL ── */
+/* RENDER */
 function render(d){
   renderImpact(d.product_impact,d.summary);
   renderSummary(d.summary,d.meta);
@@ -889,7 +876,6 @@ function render(d){
   renderDomains();
 }
 
-/* ── IMPACT BANNER ── */
 function renderImpact(imp,s){
   const saved=imp?.redundant_training_hours_avoided??0;
   const eff=imp?.efficiency_gain_percent??0;
@@ -897,20 +883,19 @@ function renderImpact(imp,s){
   const cov=s?.coverage_percent??0;
   const focused=imp?.focused_learning_hours_required??0;
   document.getElementById('impactBanner').innerHTML=`
-    <div class="ib-item"><div class="ib-num c">${saved}h</div><div class="ib-lbl">Training Saved</div></div>
-    <div class="ib-item"><div class="ib-num g">${cov}%</div><div class="ib-lbl">JD Coverage</div></div>
-    <div class="ib-item"><div class="ib-num p">${eff}%</div><div class="ib-lbl">Efficiency Gain</div></div>
-    <div class="ib-item"><div class="ib-num c">${focused}h</div><div class="ib-lbl">Learning Required</div></div>
-    <div class="ib-item"><div class="ib-num g">${ver}</div><div class="ib-lbl">Skills Verified</div></div>`;
+    <div class="ib-item"><div class="ib-num c">${saved}h</div><div class="ib-lbl">Saved</div></div>
+    <div class="ib-item"><div class="ib-num g">${cov}%</div><div class="ib-lbl">Coverage</div></div>
+    <div class="ib-item"><div class="ib-num p">${eff}%</div><div class="ib-lbl">Efficiency</div></div>
+    <div class="ib-item"><div class="ib-num c">${focused}h</div><div class="ib-lbl">Learning</div></div>
+    <div class="ib-item"><div class="ib-num g">${ver}</div><div class="ib-lbl">Verified</div></div>`;
 }
 
-/* ── SUMMARY ── */
 function renderSummary(s,meta){
   const pct=s.coverage_percent||0;
-  document.getElementById('rlVal').innerHTML=`Your profile is a <em>${s.readiness}</em>`;
+  document.getElementById('rlVal').innerHTML=`Profile is a <em>${s.readiness}</em>`;
   if(meta){
     document.getElementById('metaLine').textContent=`${meta.resume_filename} · ${meta.nlp_engine} · ${meta.processing_ms}ms`;
-    document.getElementById('metaInfo').textContent=`${meta.processing_ms}ms · ${meta.nlp_engine}`;
+    document.getElementById('metaInfo').textContent=`${meta.processing_ms}ms`;
     document.getElementById('metaInfo').style.display='block';
   }
   setTimeout(()=>{
@@ -920,17 +905,14 @@ function renderSummary(s,meta){
   },80);
   const el=document.getElementById('rp');let cur=0;const inc=pct/40;
   const ti=setInterval(()=>{cur=Math.min(cur+inc,pct);el.textContent=Math.round(cur)+'%';if(cur>=pct)clearInterval(ti);},20);
-  const stats=[
+  document.getElementById('statGrid').innerHTML=[
     {n:s.total_jd_skills,l:'JD Skills',c:'c'},
-    {n:s.total_resume_skills,l:'Resume Skills',c:'g'},
+    {n:s.total_resume_skills,l:'Resume',c:'g'},
     {n:s.missing_skills??s.total_gaps??0,l:'Missing',c:'r'},
     {n:s.level_upgrade_needed??0,l:'Upgrades',c:'p'},
-  ];
-  document.getElementById('statGrid').innerHTML=stats.map(st=>`
-    <div class="sg-item"><div class="sg-num ${st.c}">${st.n}</div><div class="sg-lbl">${st.l}</div></div>`).join('');
+  ].map(st=>`<div class="sg-item"><div class="sg-num ${st.c}">${st.n}</div><div class="sg-lbl">${st.l}</div></div>`).join('');
 }
 
-/* ── CHIPS ── */
 function renderChips(id,skills,type){
   const el=document.getElementById(id);
   if(!skills?.length){el.innerHTML='<p style="color:var(--mu);font-size:11px">None detected.</p>';return;}
@@ -941,23 +923,22 @@ function renderChips(id,skills,type){
       ${s.confidence!==undefined?`<span class="cconf">${Math.round(s.confidence*100)}%</span>`:''}
     </div>`).join('');
 }
+
 function renderGapChips(id,gap){
   const el=document.getElementById(id);
-  if(!gap?.length){el.innerHTML='<p style="color:#4ade80;font-size:11px">🎉 No skill gaps — excellent match!</p>';return;}
+  if(!gap?.length){el.innerHTML='<p style="color:#4ade80;font-size:11px">🎉 No skill gaps!</p>';return;}
   el.innerHTML=gap.map((s,i)=>`
     <div class="chip ${s.gap_type==='LEVEL_UPGRADE'?'upg':'miss'}" style="animation-delay:${i*.03}s">
       <span class="cdot"></span><span>${s.name}</span>
-      <span style="font-family:var(--mono);font-size:8px;opacity:.6;">${s.gap_type==='LEVEL_UPGRADE'?'↑':'✗'}</span>
+      <span style="font-family:var(--mono);font-size:9px;opacity:.6">${s.gap_type==='LEVEL_UPGRADE'?'↑':'✗'}</span>
     </div>`).join('');
 }
 
-/* ── ROADMAP ── */
 function renderRoadmap(roadmap){
   if(!roadmap?.length){document.getElementById('rmList').innerHTML='<p style="color:var(--mu)">No roadmap generated.</p>';updateProg();return;}
   document.getElementById('totC').textContent=roadmap.length;
   document.getElementById('totHrs').textContent=roadmap.reduce((a,c)=>a+(c.catalog_courses?.[0]?.hours||0),0)+'h';
-  const el=document.getElementById('rmList');
-  el.innerHTML=roadmap.map((item,i)=>{
+  document.getElementById('rmList').innerHTML=roadmap.map((item,i)=>{
     const urg=(item.urgency||0)>=1.0,done=_done.has(item.skill);
     const cc=(item.catalog_courses||[]).map(c=>`
       <div class="cc">
@@ -969,7 +950,7 @@ function renderRoadmap(roadmap){
           ${c.hours?`<span class="cc-tag">~${c.hours}h</span>`:''}
           ${c.level?`<span class="cc-tag">${c.level}</span>`:''}
         </div>
-        ${c.url?`<a class="cc-link" href="${c.url}" target="_blank">Open →</a>`:''}
+        ${c.url?`<a class="cc-link" href="${c.url}" target="_blank">Open course →</a>`:''}
       </div>`).join('');
     const steps=(item.steps||[]).map((s,si)=>`
       <div class="st">
@@ -1001,8 +982,8 @@ function renderRoadmap(roadmap){
       </div>
       <div class="rmb">
         ${item.prerequisites_to_complete_first?.length?`<div class="prereq">⚠ Complete first: ${item.prerequisites_to_complete_first.join(', ')}</div>`:''}
-        ${cc?`<div style="margin-top:10px"><div style="font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--c);text-transform:uppercase;margin-bottom:7px">Catalog Courses</div><div class="cc-grid">${cc}</div></div>`:''}
-        <div class="steps" style="margin-top:10px;">${steps}</div>
+        ${cc?`<div style="margin-top:9px"><div style="font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--c);text-transform:uppercase;margin-bottom:6px">Catalog Courses</div><div class="cc-grid">${cc}</div></div>`:''}
+        <div class="steps" style="margin-top:9px;">${steps}</div>
         <button class="cbtn ${done?'done':''}" onclick="toggleDone(${i},'${item.skill}')">
           ${done?'✓ Completed — undo':'○ Mark Complete'}
         </button>
@@ -1011,12 +992,14 @@ function renderRoadmap(roadmap){
   }).join('');
   updateProg();
 }
+
 function toggleDone(i,skill){
   if(_done.has(skill))_done.delete(skill);else _done.add(skill);
   renderRoadmap(_data.roadmap);
   document.querySelector(`#rmc${i}`).classList.add('open');
   toast(_done.has(skill)?`✓ "${skill}" marked complete`:`"${skill}" unmarked`);
 }
+
 function updateProg(){
   if(!_data?.roadmap)return;
   const tot=_data.roadmap.length,done=_done.size,pct=tot?Math.round(done/tot*100):0;
@@ -1028,9 +1011,9 @@ function updateProg(){
   document.getElementById('doneHrs').textContent=dH+'h';
   document.getElementById('remHrs').textContent=(tH-dH)+'h';
 }
+
 function tog(h){h.closest('.rmc').classList.toggle('open');}
 
-/* ── REASONING ── */
 function renderReasoning(reasoning){
   const el=document.getElementById('reaList');
   if(!reasoning?.length){el.innerHTML='';return;}
@@ -1045,13 +1028,11 @@ function renderReasoning(reasoning){
           ${r.jd_level?`<span class="rbadge" style="background:rgba(255,255,255,.05);color:var(--mu2)">req:${r.jd_level}</span>`:''}
         </div>
         <div class="rtxt">${r.explanation}</div>
-        ${r.prerequisites?.length?`<div style="font-size:9px;color:var(--o);margin-top:3px">⚠ Prereqs: ${r.prerequisites.join(', ')}</div>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
-/* ── DASHBOARD ── */
 function renderDashboard(){
   if(!_data)return;
   const s=_data.summary,imp=_data.product_impact||{};
@@ -1059,58 +1040,56 @@ function renderDashboard(){
   const totH=_data.roadmap?.reduce((a,c)=>a+(c.catalog_courses?.[0]?.hours||0),0)||0;
   const doneH=_data.roadmap?.filter(r=>_done.has(r.skill)).reduce((a,c)=>a+(c.catalog_courses?.[0]?.hours||0),0)||0;
   const saved=imp.redundant_training_hours_avoided||0;
-
   document.getElementById('kpiGrid').innerHTML=`
-    <div class="dk"><div class="dk-num c">${saved}h</div><div class="dk-lbl">Training Time Saved</div></div>
+    <div class="dk"><div class="dk-num c">${saved}h</div><div class="dk-lbl">Training Saved</div></div>
     <div class="dk"><div class="dk-num g">${s.coverage_percent||0}%</div><div class="dk-lbl">Skill Coverage</div></div>
-    <div class="dk"><div class="dk-num p">${readiness}%</div><div class="dk-lbl">Competency Readiness</div></div>
-    <div class="dk"><div class="dk-num o">${_data.roadmap?.length||0}</div><div class="dk-lbl">Courses in Roadmap</div></div>`;
-
-  // Category data
+    <div class="dk"><div class="dk-num p">${readiness}%</div><div class="dk-lbl">Readiness</div></div>
+    <div class="dk"><div class="dk-num o">${_data.roadmap?.length||0}</div><div class="dk-lbl">Courses</div></div>`;
   const cats={};
   (_data.resume_skills||[]).forEach(s=>{const c=s.category||'General';cats[c]=(cats[c]||{k:0,t:0});cats[c].k++;});
   (_data.jd_skills||[]).forEach(s=>{const c=s.category||'General';if(!cats[c])cats[c]={k:0,t:0};cats[c].t++;});
-  const catArr=Object.entries(cats).filter(([,v])=>v.t>0).slice(0,6);
-
-  // Comp bars
-  const gs=['linear-gradient(90deg,#38bdf8,#7dd3fc)','linear-gradient(90deg,#818cf8,#a5b4fc)','linear-gradient(90deg,#4ade80,#3dd6c8)','linear-gradient(90deg,#fb923c,#f87171)','linear-gradient(90deg,#e8b84b,#4ade80)','linear-gradient(90deg,#38bdf8,#4ade80)'];
+  const catArr=Object.entries(cats).filter(([,v])=>v.t>0).slice(0,5);
+  const gs=['linear-gradient(90deg,#38bdf8,#7dd3fc)','linear-gradient(90deg,#818cf8,#a5b4fc)','linear-gradient(90deg,#4ade80,#3dd6c8)','linear-gradient(90deg,#fb923c,#f87171)','linear-gradient(90deg,#e8b84b,#4ade80)'];
   document.getElementById('compBars').innerHTML=catArr.map(([cat,v],i)=>{
     const pct=v.t>0?Math.min(100,Math.round(v.k/v.t*100)):0;
     return `<div class="comp-bar">
-      <div class="comp-lbl"><span class="comp-name">${cat}</span><span class="comp-pct">${pct}%</span></div>
+      <div class="comp-lbl"><span>${cat}</span><span class="comp-pct">${pct}%</span></div>
       <div class="comp-track"><div class="comp-fill" style="width:0%;background:${gs[i%gs.length]}" data-w="${pct}"></div></div>
     </div>`;
   }).join('');
   setTimeout(()=>document.querySelectorAll('.comp-fill').forEach(el=>el.style.width=el.dataset.w+'%'),80);
-
-  // Time breakdown
   document.getElementById('timeBrkdn').innerHTML=`
-    <div class="time-row"><span>Already mastered (saved)</span><span class="time-val">~${saved}h</span></div>
-    <div class="time-row"><span>Total learning path</span><span class="time-val">${totH}h</span></div>
-    <div class="time-row"><span>Completed so far</span><span class="time-val">${doneH}h</span></div>
+    <div class="time-row"><span>Mastered (saved)</span><span class="time-val">~${saved}h</span></div>
+    <div class="time-row"><span>Learning path total</span><span class="time-val">${totH}h</span></div>
+    <div class="time-row"><span>Completed</span><span class="time-val">${doneH}h</span></div>
     <div class="time-row"><span>Remaining</span><span class="time-val">${totH-doneH}h</span></div>
-    <div class="time-row" style="border-top:1px solid rgba(56,189,248,.2);margin-top:4px;padding-top:6px;font-weight:600">
+    <div class="time-row" style="border-top:1px solid rgba(56,189,248,.2);margin-top:3px;padding-top:5px;font-weight:600">
       <span>Efficiency gain</span><span class="time-val" style="color:#4ade80">${imp.efficiency_gain_percent||0}%</span>
     </div>`;
-
-  // Charts
-  const radarCtx=document.getElementById('radarChart').getContext('2d');
+  const rc=document.getElementById('radarChart').getContext('2d');
   if(_radar)_radar.destroy();
-  _radar=new Chart(radarCtx,{type:'radar',
-    data:{labels:catArr.map(([c])=>c),datasets:[{label:'Coverage',data:catArr.map(([,v])=>v.t>0?Math.min(100,Math.round(v.k/v.t*100)):0),backgroundColor:'rgba(56,189,248,.1)',borderColor:'#38bdf8',pointBackgroundColor:'#38bdf8',pointBorderColor:'#fff',pointRadius:3}]},
+  _radar=new Chart(rc,{type:'radar',
+    data:{labels:catArr.map(([c])=>c),datasets:[{label:'Coverage',
+      data:catArr.map(([,v])=>v.t>0?Math.min(100,Math.round(v.k/v.t*100)):0),
+      backgroundColor:'rgba(56,189,248,.1)',borderColor:'#38bdf8',
+      pointBackgroundColor:'#38bdf8',pointBorderColor:'#fff',pointRadius:3}]},
     options:{responsive:true,maintainAspectRatio:false,
-      scales:{r:{backgroundColor:'rgba(255,255,255,.01)',gridLines:{color:'rgba(255,255,255,.05)'},angleLines:{color:'rgba(255,255,255,.05)'},ticks:{backdropColor:'transparent',color:'#5a6a90',font:{size:9}},pointLabels:{color:'#8897b8',font:{size:10}},min:0,max:100}},
+      scales:{r:{ticks:{backdropColor:'transparent',color:'#5a6a90',font:{size:8}},
+        pointLabels:{color:'#8897b8',font:{size:9}},min:0,max:100,
+        grid:{color:'rgba(255,255,255,.05)'},angleLines:{color:'rgba(255,255,255,.05)'}}},
       plugins:{legend:{display:false}}}});
-
-  const dCtx=document.getElementById('doughnutChart').getContext('2d');
+  const dc=document.getElementById('doughnutChart').getContext('2d');
   if(_dnut)_dnut.destroy();
-  _dnut=new Chart(dCtx,{type:'doughnut',
-    data:{labels:['Ready','In Progress','Gap'],datasets:[{data:[readiness,Math.max(0,(100-readiness)*.4),Math.max(0,(100-readiness)*.6)],backgroundColor:['rgba(74,222,128,.8)','rgba(56,189,248,.8)','rgba(248,113,113,.4)'],borderColor:['#4ade80','#38bdf8','#f87171'],borderWidth:2}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'70%',
-      plugins:{legend:{position:'bottom',labels:{color:'#8897b8',padding:10,font:{size:10}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${Math.round(ctx.parsed)}%`}}}}});
+  _dnut=new Chart(dc,{type:'doughnut',
+    data:{labels:['Ready','In Progress','Gap'],
+      datasets:[{data:[readiness,Math.max(0,(100-readiness)*.4),Math.max(0,(100-readiness)*.6)],
+        backgroundColor:['rgba(74,222,128,.8)','rgba(56,189,248,.8)','rgba(248,113,113,.4)'],
+        borderColor:['#4ade80','#38bdf8','#f87171'],borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{position:'bottom',labels:{color:'#8897b8',padding:8,font:{size:9}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${Math.round(ctx.parsed)}%`}}}}});
 }
 
-/* ── DOMAINS ── */
 function renderDomains(){
   document.getElementById('domGrid').innerHTML=DOMAINS.map(d=>`
     <div class="dom-card">
@@ -1118,33 +1097,31 @@ function renderDomains(){
       <div class="dom-name">${d.name}</div>
       <div class="dom-desc">${d.desc}</div>
       <div class="dom-skills">
-        ${d.req.slice(0,4).map(s=>`<span class="dom-skill req">${s}</span>`).join('')}
-        ${d.nice.slice(0,3).map(s=>`<span class="dom-skill">${s}</span>`).join('')}
+        ${d.req.slice(0,3).map(s=>`<span class="dom-skill req">${s}</span>`).join('')}
+        ${d.nice.slice(0,2).map(s=>`<span class="dom-skill">${s}</span>`).join('')}
       </div>
     </div>`).join('');
 }
 
-/* ── TABS ── */
+/* TABS */
 document.querySelectorAll('.tbtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
     document.querySelectorAll('.tp').forEach(p=>p.classList.remove('on'));
     btn.classList.add('on');
-    const id='tp-'+btn.dataset.t;
-    document.getElementById(id).classList.add('on');
+    document.getElementById('tp-'+btn.dataset.t).classList.add('on');
     if(btn.dataset.t==='dashboard')setTimeout(renderDashboard,50);
     if(btn.dataset.t==='domains'&&!document.getElementById('domGrid').children.length)renderDomains();
   });
 });
 
-/* ── HELPERS ── */
+/* HELPERS */
 function showProc(){document.getElementById('procPill').classList.add('on');}
 function hideProc(){document.getElementById('procPill').classList.remove('on');}
 function showErr(m){const e=document.getElementById('errBox');e.textContent='⚠ '+m;e.classList.add('on');}
 function hideErr(){document.getElementById('errBox').classList.remove('on');}
-function toast(m,d=2800){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+function toast(m,d=2500){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
 
-/* init domains on load so tab is ready */
 renderDomains();
 </script>
 </body>
